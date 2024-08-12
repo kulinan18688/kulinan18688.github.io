@@ -8,38 +8,43 @@
 <p>查看版本</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ frida --version</span><br></pre></td></tr></table></figure>
 <p>我这边的版本是16.4.7,对应的frida-server版本也要选择是16.4.7</p>
-<h2 id="安装frida-server"><a href="#安装frida-server" class="headerlink" title="安装frida-server"></a>安装frida-server</h2><p>服务端安装在手机上，就是负责接收上位机下发的命令的手机<br>&lt;– more –&gt;<br>下载地址：<a href="https://github.com/frida/frida/releases">https://github.com/frida/frida/releases</a><br>除了版本，还要注意手机的架构, 查看手机架构的方法</p>
+<h2 id="安装frida-server"><a href="#安装frida-server" class="headerlink" title="安装frida-server"></a>安装frida-server</h2><p>服务端安装在手机上，就是负责接收上位机下发的命令的手机</p>
+<span id="more"></span>
+<p>下载地址：<a href="https://github.com/frida/frida/releases">https://github.com/frida/frida/releases</a><br>除了版本，还要注意手机的架构, 查看手机架构的方法</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"> adb shell getprop ro.product.cpu.abi</span><br><span class="line"> 或者</span><br><span class="line">adb shell <span class="built_in">uname</span> -m</span><br></pre></td></tr></table></figure>
 <p>我这边的手机是x86,所以我要下载x86版本的frida-server: frida-server-16.4.7-android-x86.xz</p>
 <p>下载对应版本的frida-server，然后上传到手机</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ adb push frida-server /data/local/tmp //这里要注意，为什么存放路径是/data/local/tmp，\n因为这个路径是手机的临时目录，</span><br><span class="line">不需要root权限，而且具有执行权限,一开始我放到/sdcard/目录下，一直报权限不足</span><br><span class="line"></span><br><span class="line">$ adb shell <span class="string">&quot;chmod 755 /data/local/tmp/frida-server&quot;</span></span><br><span class="line">$ adb shell <span class="string">&quot;/data/local/tmp/frida-server &amp;&quot;</span></span><br></pre></td></tr></table></figure>
 <p>测试是否安装成功</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ frida-ps -U</span><br></pre></td></tr></table></figure>
+<p>表格</p>
+<table>
+<thead>
+<tr>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+</tr>
+<tr>
+<td>7</td>
+<td>8</td>
+<td>9</td>
+</tr>
+<tr>
+<td><img src="/images/avatar.png," alt="frida" title="frida"></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
 ]]></content>
       <categories>
         <category>逆向 - Frida</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>Hello Worl11d</title>
-    <url>/2024/08/10/hell1/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<span id="more"></span>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-]]></content>
-      <categories>
-        <category>前端 - JavaScript</category>
       </categories>
   </entry>
   <entry>
@@ -62,6 +67,28 @@
 ]]></content>
       <categories>
         <category>编程 - 前端 - JavaScript</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Hello Worl11d</title>
+    <url>/2024/08/10/hell1/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<span id="more"></span>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
+      <categories>
+        <category>前端 - JavaScript</category>
       </categories>
   </entry>
 </search>
