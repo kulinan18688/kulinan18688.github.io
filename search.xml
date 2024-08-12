@@ -8,11 +8,13 @@
 <p>查看版本</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ frida --version</span><br></pre></td></tr></table></figure>
 <p>我这边的版本是16.4.7,对应的frida-server版本也要选择是16.4.7</p>
-<h2 id="安装frida-server"><a href="#安装frida-server" class="headerlink" title="安装frida-server"></a>安装frida-server</h2><p>服务端安装在手机上，就是负责接收上位机下发的命令的手机<br>下载地址：<a href="https://github.com/frida/frida/releases">https://github.com/frida/frida/releases</a><br>除了版本，还要注意手机的架构, 查看手机架构的方法</p>
+<h2 id="安装frida-server"><a href="#安装frida-server" class="headerlink" title="安装frida-server"></a>安装frida-server</h2><p>服务端安装在手机上，就是负责接收上位机下发的命令的手机<br>&lt;– more –&gt;<br>下载地址：<a href="https://github.com/frida/frida/releases">https://github.com/frida/frida/releases</a><br>除了版本，还要注意手机的架构, 查看手机架构的方法</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"> adb shell getprop ro.product.cpu.abi</span><br><span class="line"> 或者</span><br><span class="line">adb shell <span class="built_in">uname</span> -m</span><br></pre></td></tr></table></figure>
 <p>我这边的手机是x86,所以我要下载x86版本的frida-server: frida-server-16.4.7-android-x86.xz</p>
 <p>下载对应版本的frida-server，然后上传到手机</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ adb push frida-server /data/local/tmp //这里要注意，为什么存放路径是/data/local/tmp，因为这个路径是手机的临时目录，不需要root权限，而且具有执行权限,一开始我放到/sdcard/目录下，一直报权限不足</span><br><span class="line"></span><br><span class="line">$ adb shell <span class="string">&quot;chmod 755 /data/local/tmp/frida-server&quot;</span></span><br><span class="line">$ adb shell <span class="string">&quot;/data/local/tmp/frida-server &amp;&quot;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ adb push frida-server /data/local/tmp //这里要注意，为什么存放路径是/data/local/tmp，\n因为这个路径是手机的临时目录，</span><br><span class="line">不需要root权限，而且具有执行权限,一开始我放到/sdcard/目录下，一直报权限不足</span><br><span class="line"></span><br><span class="line">$ adb shell <span class="string">&quot;chmod 755 /data/local/tmp/frida-server&quot;</span></span><br><span class="line">$ adb shell <span class="string">&quot;/data/local/tmp/frida-server &amp;&quot;</span></span><br></pre></td></tr></table></figure>
+<p>测试是否安装成功</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ frida-ps -U</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>逆向 - Frida</category>
