@@ -1,6 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title></title>
+    <url>/2024/08/16/hexoinstll/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>frida安装</title>
+    <url>/2024/08/11/frida%E5%AE%89%E8%A3%85/</url>
+    <content><![CDATA[<h2 id="安装frida客户端"><a href="#安装frida客户端" class="headerlink" title="安装frida客户端"></a>安装frida客户端</h2><p>客户端安装在上位机，就是负责给手机下发命令的电脑</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ pip install frida-tools</span><br></pre></td></tr></table></figure>
+<p>查看版本</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ frida --version</span><br></pre></td></tr></table></figure>
+<p>我这边的版本是16.4.7,对应的frida-server版本也要选择是16.4.7</p>
+<h2 id="安装frida-server"><a href="#安装frida-server" class="headerlink" title="安装frida-server"></a>安装frida-server</h2><p>服务端安装在手机上，就是负责接收上位机下发的命令的手机</p>
+<span id="more"></span>
+<p>下载地址：<a href="https://github.com/frida/frida/releases">https://github.com/frida/frida/releases</a><br>除了版本，还要注意手机的架构, 查看手机架构的方法</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"> adb shell getprop ro.product.cpu.abi</span><br><span class="line"> 或者</span><br><span class="line">adb shell <span class="built_in">uname</span> -m</span><br></pre></td></tr></table></figure>
+<p>我这边的手机是x86,所以我要下载x86版本的frida-server: frida-server-16.4.7-android-x86.xz</p>
+<p>下载对应版本的frida-server，然后上传到手机</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ adb push frida-server /data/local/tmp //这里要注意，为什么存放路径是/data/local/tmp，\n因为这个路径是手机的临时目录，</span><br><span class="line">不需要root权限，而且具有执行权限,一开始我放到/sdcard/目录下，一直报权限不足</span><br><span class="line"></span><br><span class="line">$ adb shell <span class="string">&quot;chmod 755 /data/local/tmp/frida-server&quot;</span></span><br><span class="line">$ adb shell <span class="string">&quot;/data/local/tmp/frida-server &amp;&quot;</span></span><br></pre></td></tr></table></figure>
+<p>测试是否安装成功</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ frida-ps -U</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>逆向 - Frida</category>
+      </categories>
+  </entry>
+  <entry>
     <title>软件的 GP 公钥不匹配问题</title>
     <url>/2024/08/15/gpgErr/</url>
     <content><![CDATA[<p>在安装 MySQL 软件包时，系统找不到与该软件包匹配的 GPG 公钥，从而无法验证包的完整性,出现以下报错信息：</p>
@@ -14,43 +41,6 @@
 <h3 id="5-禁用-GPG-检查"><a href="#5-禁用-GPG-检查" class="headerlink" title="5,禁用 GPG 检查"></a>5,禁用 GPG 检查</h3><p>如果实在没办法导入 GPG 公钥，可以禁用 GPG 检查，但是不推荐。</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum install mysql-community-server --nogpgcheck</span><br></pre></td></tr></table></figure>
 
-]]></content>
-      <categories>
-        <category>-运维</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>centos 服务器安装</title>
-    <url>/2024/08/14/serverInstall/</url>
-    <content><![CDATA[<h2 id="1-安装nginx"><a href="#1-安装nginx" class="headerlink" title="1. 安装nginx"></a>1. 安装nginx</h2><p>   正常安装nginx，yum install nginx,报错<br>   <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">No package nginx available.</span><br><span class="line">Error: Nothing to <span class="keyword">do</span></span><br></pre></td></tr></table></figure></p>
-<span id="more"></span>
-<h3 id="解决方法1："><a href="#解决方法1：" class="headerlink" title="解决方法1："></a>解决方法1：</h3>   <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> yum install epel-release</span><br></pre></td></tr></table></figure>
-<h3 id="解决方法2："><a href="#解决方法2：" class="headerlink" title="解决方法2："></a>解决方法2：</h3><pre><code>在nginx官方网站找到适合你系统的.rpm包，下载后执行以下命令安装：
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> rpm -ivh nginx-1.12.2-1.el7.ngx.x86_64.rpm</span><br></pre></td></tr></table></figure>
-</code></pre>
-<h3 id="解决方法3："><a href="#解决方法3：" class="headerlink" title="解决方法3："></a>解决方法3：</h3><pre><code>更换yum源，安装nginx
-</code></pre>
-<h4 id="备份现有YUM源"><a href="#备份现有YUM源" class="headerlink" title="备份现有YUM源"></a>备份现有YUM源</h4><pre><code>在更改YUM源之前，建议先备份当前的YUM源配置，以便在需要时可以还原。
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">cp</span> -r /etc/yum.repos.d/ /etc/yum.repos.d.backup/</span><br></pre></td></tr></table></figure>
-</code></pre>
-<h4 id="更换为阿里云YUM源"><a href="#更换为阿里云YUM源" class="headerlink" title="更换为阿里云YUM源"></a>更换为阿里云YUM源</h4><pre><code><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> sed -e <span class="string">&#x27;s|^mirrorlist=|#mirrorlist=|g&#x27;</span> \</span><br><span class="line">     -e <span class="string">&#x27;s|^#baseurl=http://mirror.centos.org/centos|baseurl=https://mirrors.aliyun.com/centos|g&#x27;</span> \</span><br><span class="line">     -i.bak \</span><br><span class="line">     /etc/yum.repos.d/CentOS-Base.repo</span><br></pre></td></tr></table></figure>
-</code></pre>
-<h4 id="清理YUM缓存并更新"><a href="#清理YUM缓存并更新" class="headerlink" title="清理YUM缓存并更新"></a>清理YUM缓存并更新</h4><pre><code><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> yum clean all</span><br><span class="line"><span class="built_in">sudo</span> yum makecache</span><br></pre></td></tr></table></figure>
-</code></pre>
-<h2 id="安装Nginx"><a href="#安装Nginx" class="headerlink" title="安装Nginx"></a>安装Nginx</h2><pre><code><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> yum install nginx</span><br></pre></td></tr></table></figure>
-</code></pre>
-<p>##2. 安装mysql5.7</p>
-<h3 id="2-1-添加MySQL官方仓库"><a href="#2-1-添加MySQL官方仓库" class="headerlink" title="2.1 添加MySQL官方仓库"></a>2.1 添加MySQL官方仓库</h3><pre><code><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget https://dev.mysql.com/get/mysql57-community-release-el7-11.noarch.rpm</span><br><span class="line"><span class="built_in">sudo</span> rpm -ivh mysql57-community-release-el7-11.noarch.rpm</span><br></pre></td></tr></table></figure>
-</code></pre>
-<h3 id="2-2-安装MySQL"><a href="#2-2-安装MySQL" class="headerlink" title="2.2 安装MySQL"></a>2.2 安装MySQL</h3><pre><code><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> yum install mysql-community-server</span><br></pre></td></tr></table></figure>
-</code></pre>
-<h3 id="2-3-启动MySQL"><a href="#2-3-启动MySQL" class="headerlink" title="2.3 启动MySQL"></a>2.3 启动MySQL</h3><pre><code><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl start mysqld</span><br><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">enable</span> mysqld</span><br></pre></td></tr></table></figure>
-</code></pre>
-<h3 id="2-4-查看MySQL初始密码"><a href="#2-4-查看MySQL初始密码" class="headerlink" title="2.4 查看MySQL初始密码"></a>2.4 查看MySQL初始密码</h3><pre><code><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> grep <span class="string">&#x27;temporary password&#x27;</span> /var/log/mysqld.log</span><br></pre></td></tr></table></figure>
-</code></pre>
-<h3 id="2-5-设置安全选项"><a href="#2-5-设置安全选项" class="headerlink" title="2.5 设置安全选项"></a>2.5 设置安全选项</h3><pre><code>使用mysql_secure_installation命令来配置安全设置（例如修改密码、删除匿名用户等）
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> mysql_secure_installation</span><br></pre></td></tr></table></figure>
-</code></pre>
 ]]></content>
       <categories>
         <category>-运维</category>
@@ -100,9 +90,15 @@
       </categories>
   </entry>
   <entry>
-    <title></title>
-    <url>/2024/08/16/hexoinstll/</url>
-    <content><![CDATA[]]></content>
+    <title>为域名申请SSL证书</title>
+    <url>/2024/08/16/sslfordomain/</url>
+    <content><![CDATA[<p><a href="https://zerossl.com/">https://zerossl.com/</a><br>这个服务商支持90天免费证书，可以申请一个证书，然后下载证书文件，然后在服务器上配置证书即可。<br>同时他支持Ip地址验证，可以通过验证ip地址来申请证书，这样就不需要域名了。<br>第一次申请应该需要注册一个账号，然后登录</p>
+<span id="more"></span>
+<h3 id="申请证书"><a href="#申请证书" class="headerlink" title="申请证书"></a>申请证书</h3><p>进入<a href="https://zerossl.com/">https://zerossl.com/</a> 后,登录<br><img src="/images/ssl1.png" alt="image"></p>
+]]></content>
+      <categories>
+        <category>-运维</category>
+      </categories>
   </entry>
   <entry>
     <title>yum 锁定问题</title>
@@ -122,36 +118,40 @@
       </categories>
   </entry>
   <entry>
-    <title>为域名申请SSL证书</title>
-    <url>/2024/08/16/sslfordomain/</url>
-    <content><![CDATA[<p><a href="https://zerossl.com/">https://zerossl.com/</a><br>这个服务商支持90天免费证书，可以申请一个证书，然后下载证书文件，然后在服务器上配置证书即可。<br>同时他支持Ip地址验证，可以通过验证ip地址来申请证书，这样就不需要域名了。<br>第一次申请应该需要注册一个账号，然后登录</p>
+    <title>centos 服务器安装</title>
+    <url>/2024/08/14/serverInstall/</url>
+    <content><![CDATA[<h2 id="1-安装nginx"><a href="#1-安装nginx" class="headerlink" title="1. 安装nginx"></a>1. 安装nginx</h2><p>   正常安装nginx，yum install nginx,报错<br>   <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">No package nginx available.</span><br><span class="line">Error: Nothing to <span class="keyword">do</span></span><br></pre></td></tr></table></figure></p>
 <span id="more"></span>
-<h3 id="申请证书"><a href="#申请证书" class="headerlink" title="申请证书"></a>申请证书</h3><p>进入<a href="https://zerossl.com/">https://zerossl.com/</a> 后,登录<br><img src="/images/ssl1.png" alt="image"></p>
+<h3 id="解决方法1："><a href="#解决方法1：" class="headerlink" title="解决方法1："></a>解决方法1：</h3>   <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> yum install epel-release</span><br></pre></td></tr></table></figure>
+<h3 id="解决方法2："><a href="#解决方法2：" class="headerlink" title="解决方法2："></a>解决方法2：</h3><pre><code>在nginx官方网站找到适合你系统的.rpm包，下载后执行以下命令安装：
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> rpm -ivh nginx-1.12.2-1.el7.ngx.x86_64.rpm</span><br></pre></td></tr></table></figure>
+</code></pre>
+<h3 id="解决方法3："><a href="#解决方法3：" class="headerlink" title="解决方法3："></a>解决方法3：</h3><pre><code>更换yum源，安装nginx
+</code></pre>
+<h4 id="备份现有YUM源"><a href="#备份现有YUM源" class="headerlink" title="备份现有YUM源"></a>备份现有YUM源</h4><pre><code>在更改YUM源之前，建议先备份当前的YUM源配置，以便在需要时可以还原。
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">cp</span> -r /etc/yum.repos.d/ /etc/yum.repos.d.backup/</span><br></pre></td></tr></table></figure>
+</code></pre>
+<h4 id="更换为阿里云YUM源"><a href="#更换为阿里云YUM源" class="headerlink" title="更换为阿里云YUM源"></a>更换为阿里云YUM源</h4><pre><code><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> sed -e <span class="string">&#x27;s|^mirrorlist=|#mirrorlist=|g&#x27;</span> \</span><br><span class="line">     -e <span class="string">&#x27;s|^#baseurl=http://mirror.centos.org/centos|baseurl=https://mirrors.aliyun.com/centos|g&#x27;</span> \</span><br><span class="line">     -i.bak \</span><br><span class="line">     /etc/yum.repos.d/CentOS-Base.repo</span><br></pre></td></tr></table></figure>
+</code></pre>
+<h4 id="清理YUM缓存并更新"><a href="#清理YUM缓存并更新" class="headerlink" title="清理YUM缓存并更新"></a>清理YUM缓存并更新</h4><pre><code><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> yum clean all</span><br><span class="line"><span class="built_in">sudo</span> yum makecache</span><br></pre></td></tr></table></figure>
+</code></pre>
+<h2 id="安装Nginx"><a href="#安装Nginx" class="headerlink" title="安装Nginx"></a>安装Nginx</h2><pre><code><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> yum install nginx</span><br></pre></td></tr></table></figure>
+</code></pre>
+<p>##2. 安装mysql5.7</p>
+<h3 id="2-1-添加MySQL官方仓库"><a href="#2-1-添加MySQL官方仓库" class="headerlink" title="2.1 添加MySQL官方仓库"></a>2.1 添加MySQL官方仓库</h3><pre><code><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget https://dev.mysql.com/get/mysql57-community-release-el7-11.noarch.rpm</span><br><span class="line"><span class="built_in">sudo</span> rpm -ivh mysql57-community-release-el7-11.noarch.rpm</span><br></pre></td></tr></table></figure>
+</code></pre>
+<h3 id="2-2-安装MySQL"><a href="#2-2-安装MySQL" class="headerlink" title="2.2 安装MySQL"></a>2.2 安装MySQL</h3><pre><code><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> yum install mysql-community-server</span><br></pre></td></tr></table></figure>
+</code></pre>
+<h3 id="2-3-启动MySQL"><a href="#2-3-启动MySQL" class="headerlink" title="2.3 启动MySQL"></a>2.3 启动MySQL</h3><pre><code><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl start mysqld</span><br><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">enable</span> mysqld</span><br></pre></td></tr></table></figure>
+</code></pre>
+<h3 id="2-4-查看MySQL初始密码"><a href="#2-4-查看MySQL初始密码" class="headerlink" title="2.4 查看MySQL初始密码"></a>2.4 查看MySQL初始密码</h3><pre><code><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> grep <span class="string">&#x27;temporary password&#x27;</span> /var/log/mysqld.log</span><br></pre></td></tr></table></figure>
+</code></pre>
+<h3 id="2-5-设置安全选项"><a href="#2-5-设置安全选项" class="headerlink" title="2.5 设置安全选项"></a>2.5 设置安全选项</h3><pre><code>使用mysql_secure_installation命令来配置安全设置（例如修改密码、删除匿名用户等）
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> mysql_secure_installation</span><br></pre></td></tr></table></figure>
+</code></pre>
 ]]></content>
       <categories>
         <category>-运维</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>frida安装</title>
-    <url>/2024/08/11/frida%E5%AE%89%E8%A3%85/</url>
-    <content><![CDATA[<h2 id="安装frida客户端"><a href="#安装frida客户端" class="headerlink" title="安装frida客户端"></a>安装frida客户端</h2><p>客户端安装在上位机，就是负责给手机下发命令的电脑</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ pip install frida-tools</span><br></pre></td></tr></table></figure>
-<p>查看版本</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ frida --version</span><br></pre></td></tr></table></figure>
-<p>我这边的版本是16.4.7,对应的frida-server版本也要选择是16.4.7</p>
-<h2 id="安装frida-server"><a href="#安装frida-server" class="headerlink" title="安装frida-server"></a>安装frida-server</h2><p>服务端安装在手机上，就是负责接收上位机下发的命令的手机</p>
-<span id="more"></span>
-<p>下载地址：<a href="https://github.com/frida/frida/releases">https://github.com/frida/frida/releases</a><br>除了版本，还要注意手机的架构, 查看手机架构的方法</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"> adb shell getprop ro.product.cpu.abi</span><br><span class="line"> 或者</span><br><span class="line">adb shell <span class="built_in">uname</span> -m</span><br></pre></td></tr></table></figure>
-<p>我这边的手机是x86,所以我要下载x86版本的frida-server: frida-server-16.4.7-android-x86.xz</p>
-<p>下载对应版本的frida-server，然后上传到手机</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ adb push frida-server /data/local/tmp //这里要注意，为什么存放路径是/data/local/tmp，\n因为这个路径是手机的临时目录，</span><br><span class="line">不需要root权限，而且具有执行权限,一开始我放到/sdcard/目录下，一直报权限不足</span><br><span class="line"></span><br><span class="line">$ adb shell <span class="string">&quot;chmod 755 /data/local/tmp/frida-server&quot;</span></span><br><span class="line">$ adb shell <span class="string">&quot;/data/local/tmp/frida-server &amp;&quot;</span></span><br></pre></td></tr></table></figure>
-<p>测试是否安装成功</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ frida-ps -U</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>逆向 - Frida</category>
       </categories>
   </entry>
 </search>
