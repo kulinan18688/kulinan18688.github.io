@@ -94,7 +94,7 @@
     <url>/2024/08/16/sslfordomain/</url>
     <content><![CDATA[<p><a href="https://zerossl.com/">https://zerossl.com/</a><br>这个服务商支持90天免费证书，可以申请一个证书，然后下载证书文件，然后在服务器上配置证书即可。<br>同时他支持Ip地址验证，可以通过验证ip地址来申请证书，这样就不需要域名了。<br>第一次申请应该需要注册一个账号，然后登录</p>
 <span id="more"></span>
-<h3 id="申请证书"><a href="#申请证书" class="headerlink" title="申请证书"></a>申请证书</h3><p>进入<a href="https://zerossl.com/">https://zerossl.com/</a> 后,登录<br><img src="/images/ssl1.png" alt="image"></p>
+<h3 id="申请证书"><a href="#申请证书" class="headerlink" title="申请证书"></a>申请证书</h3><p>进入<a href="https://zerossl.com/">https://zerossl.com/</a> 后,登录<br><img src="/images/ssl1.png" alt="image"><br>点击New Certificate<br><img src="/images/ssl2.png" alt="image"><br>输入域名，点击Next<br><img src="/images/ssl3.png" alt="image"><br>点击Next<br><img src="/images/ssl4.png" alt="image"><br>点击Next<br><img src="/images/ssl5.png" alt="image"><br>点击Next<br><img src="/images/ssl6.png" alt="image"></p>
 ]]></content>
       <categories>
         <category>-运维</category>
