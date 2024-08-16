@@ -1,55 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>frida安装</title>
-    <url>/2024/08/11/frida%E5%AE%89%E8%A3%85/</url>
-    <content><![CDATA[<h2 id="安装frida客户端"><a href="#安装frida客户端" class="headerlink" title="安装frida客户端"></a>安装frida客户端</h2><p>客户端安装在上位机，就是负责给手机下发命令的电脑</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ pip install frida-tools</span><br></pre></td></tr></table></figure>
-<p>查看版本</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ frida --version</span><br></pre></td></tr></table></figure>
-<p>我这边的版本是16.4.7,对应的frida-server版本也要选择是16.4.7</p>
-<h2 id="安装frida-server"><a href="#安装frida-server" class="headerlink" title="安装frida-server"></a>安装frida-server</h2><p>服务端安装在手机上，就是负责接收上位机下发的命令的手机</p>
+    <title>软件的 GP 公钥不匹配问题</title>
+    <url>/2024/08/15/gpgErr/</url>
+    <content><![CDATA[<p>在安装 MySQL 软件包时，系统找不到与该软件包匹配的 GPG 公钥，从而无法验证包的完整性,出现以下报错信息：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Failing package is: mysql-community-server-5.7.44-1.el7.x86_64</span><br><span class="line">GPG Keys are configured as: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-mysql</span><br></pre></td></tr></table></figure>
 <span id="more"></span>
-<p>下载地址：<a href="https://github.com/frida/frida/releases">https://github.com/frida/frida/releases</a><br>除了版本，还要注意手机的架构, 查看手机架构的方法</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"> adb shell getprop ro.product.cpu.abi</span><br><span class="line"> 或者</span><br><span class="line">adb shell <span class="built_in">uname</span> -m</span><br></pre></td></tr></table></figure>
-<p>我这边的手机是x86,所以我要下载x86版本的frida-server: frida-server-16.4.7-android-x86.xz</p>
-<p>下载对应版本的frida-server，然后上传到手机</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ adb push frida-server /data/local/tmp //这里要注意，为什么存放路径是/data/local/tmp，\n因为这个路径是手机的临时目录，</span><br><span class="line">不需要root权限，而且具有执行权限,一开始我放到/sdcard/目录下，一直报权限不足</span><br><span class="line"></span><br><span class="line">$ adb shell <span class="string">&quot;chmod 755 /data/local/tmp/frida-server&quot;</span></span><br><span class="line">$ adb shell <span class="string">&quot;/data/local/tmp/frida-server &amp;&quot;</span></span><br></pre></td></tr></table></figure>
-<p>测试是否安装成功</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ frida-ps -U</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>逆向 - Frida</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>mysqldump备份数据库</title>
-    <url>/2024/08/15/mysqldump/</url>
-    <content><![CDATA[<p>我们可以使用mysqldump命令备份MySQL数据库，mysqldump是MySQL数据库备份工具，可以将数据库备份为SQL文件，然后可以使用这个SQL文件恢复数据库。</p>
-<span id="more"></span>
-<h2 id="备份"><a href="#备份" class="headerlink" title="备份"></a>备份</h2><h3 id="1-备份数据库"><a href="#1-备份数据库" class="headerlink" title="1, 备份数据库"></a>1, 备份数据库</h3><p>你要导出的数据库名为 source_db，并且你希望将导出的文件保存为 source_db.sql：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysqldump -u 用户名 -p 密码 source_db &gt; source_db.sql</span><br></pre></td></tr></table></figure>
-<h3 id="2-备份所有数据库"><a href="#2-备份所有数据库" class="headerlink" title="2, 备份所有数据库"></a>2, 备份所有数据库</h3><p>如果你想备份所有数据库，可以使用–all-databases选项：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysqldump -u 用户名 -p --all-databases &gt; all_databases.sql</span><br></pre></td></tr></table></figure>
-<h3 id="3-备份数据库结构"><a href="#3-备份数据库结构" class="headerlink" title="3, 备份数据库结构"></a>3, 备份数据库结构</h3><p>如果你只想备份数据库结构，可以使用–no-data选项：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysqldump -u 用户名 -p --no-data source_db &gt; source_db_structure.sql</span><br></pre></td></tr></table></figure>
-<h3 id="4-备份数据库数据"><a href="#4-备份数据库数据" class="headerlink" title="4, 备份数据库数据"></a>4, 备份数据库数据</h3><p>如果你只想备份数据库数据，可以使用–no-create-info选项：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysqldump -u 用户名 -p --no-create-info source_db &gt; source_db_data.sql</span><br></pre></td></tr></table></figure>
-<h3 id="5-备份数据库表"><a href="#5-备份数据库表" class="headerlink" title="5, 备份数据库表"></a>5, 备份数据库表</h3><p>如果你只想备份数据库中的某些表，可以使用–tables选项：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysqldump -u 用户名 -p source_db --tables table1 table2 &gt; source_db_tables.sql</span><br></pre></td></tr></table></figure>
-<h2 id="导入恢复"><a href="#导入恢复" class="headerlink" title="导入恢复"></a>导入恢复</h2><h3 id="1-导入数据库"><a href="#1-导入数据库" class="headerlink" title="1, 导入数据库"></a>1, 导入数据库</h3><p>你可以使用以下命令将数据库导入到MySQL服务器：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql -u 用户名 -p 密码 source_db &lt; source_db.sql</span><br></pre></td></tr></table></figure>
-
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><h3 id="1-查看已安装的-GPG-公钥"><a href="#1-查看已安装的-GPG-公钥" class="headerlink" title="1, 查看已安装的 GPG 公钥"></a>1, 查看已安装的 GPG 公钥</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rpm -qa gpg-pubkey</span><br></pre></td></tr></table></figure>
+<h3 id="2-查看软件包的-GPG-公钥"><a href="#2-查看软件包的-GPG-公钥" class="headerlink" title="2, 查看软件包的 GPG 公钥"></a>2, 查看软件包的 GPG 公钥</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rpm -q gpg-pubkey --qf <span class="string">&#x27;%&#123;name&#125;-%&#123;version&#125;-%&#123;release&#125; --&gt; %&#123;summary&#125;\n&#x27;</span></span><br></pre></td></tr></table></figure>
+<h3 id="3-导入软件包的-GPG-公钥"><a href="#3-导入软件包的-GPG-公钥" class="headerlink" title="3, 导入软件包的 GPG 公钥"></a>3, 导入软件包的 GPG 公钥</h3><p>在&#x2F;etc&#x2F;pki&#x2F;rpm-gpg&#x2F; 查看是否有对应的 GPG 公钥文件，如果没有，可以从官方网站下载对应的 GPG 公钥文件，然后导入。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-mysql</span><br></pre></td></tr></table></figure>
+<h3 id="4-重新安装软件包"><a href="#4-重新安装软件包" class="headerlink" title="4, 重新安装软件包"></a>4, 重新安装软件包</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum reinstall mysql-community-server</span><br></pre></td></tr></table></figure>
+<h3 id="5-禁用-GPG-检查"><a href="#5-禁用-GPG-检查" class="headerlink" title="5,禁用 GPG 检查"></a>5,禁用 GPG 检查</h3><p>如果实在没办法导入 GPG 公钥，可以禁用 GPG 检查，但是不推荐。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum install mysql-community-server --nogpgcheck</span><br></pre></td></tr></table></figure>
 
 ]]></content>
       <categories>
         <category>-运维</category>
       </categories>
-  </entry>
-  <entry>
-    <title></title>
-    <url>/2024/08/16/hexoinstll/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>centos 服务器安装</title>
@@ -89,6 +57,30 @@
       </categories>
   </entry>
   <entry>
+    <title>mysqldump备份数据库</title>
+    <url>/2024/08/15/mysqldump/</url>
+    <content><![CDATA[<p>我们可以使用mysqldump命令备份MySQL数据库，mysqldump是MySQL数据库备份工具，可以将数据库备份为SQL文件，然后可以使用这个SQL文件恢复数据库。</p>
+<span id="more"></span>
+<h2 id="备份"><a href="#备份" class="headerlink" title="备份"></a>备份</h2><h3 id="1-备份数据库"><a href="#1-备份数据库" class="headerlink" title="1, 备份数据库"></a>1, 备份数据库</h3><p>你要导出的数据库名为 source_db，并且你希望将导出的文件保存为 source_db.sql：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysqldump -u 用户名 -p 密码 source_db &gt; source_db.sql</span><br></pre></td></tr></table></figure>
+<h3 id="2-备份所有数据库"><a href="#2-备份所有数据库" class="headerlink" title="2, 备份所有数据库"></a>2, 备份所有数据库</h3><p>如果你想备份所有数据库，可以使用–all-databases选项：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysqldump -u 用户名 -p --all-databases &gt; all_databases.sql</span><br></pre></td></tr></table></figure>
+<h3 id="3-备份数据库结构"><a href="#3-备份数据库结构" class="headerlink" title="3, 备份数据库结构"></a>3, 备份数据库结构</h3><p>如果你只想备份数据库结构，可以使用–no-data选项：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysqldump -u 用户名 -p --no-data source_db &gt; source_db_structure.sql</span><br></pre></td></tr></table></figure>
+<h3 id="4-备份数据库数据"><a href="#4-备份数据库数据" class="headerlink" title="4, 备份数据库数据"></a>4, 备份数据库数据</h3><p>如果你只想备份数据库数据，可以使用–no-create-info选项：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysqldump -u 用户名 -p --no-create-info source_db &gt; source_db_data.sql</span><br></pre></td></tr></table></figure>
+<h3 id="5-备份数据库表"><a href="#5-备份数据库表" class="headerlink" title="5, 备份数据库表"></a>5, 备份数据库表</h3><p>如果你只想备份数据库中的某些表，可以使用–tables选项：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysqldump -u 用户名 -p source_db --tables table1 table2 &gt; source_db_tables.sql</span><br></pre></td></tr></table></figure>
+<h2 id="导入恢复"><a href="#导入恢复" class="headerlink" title="导入恢复"></a>导入恢复</h2><h3 id="1-导入数据库"><a href="#1-导入数据库" class="headerlink" title="1, 导入数据库"></a>1, 导入数据库</h3><p>你可以使用以下命令将数据库导入到MySQL服务器：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql -u 用户名 -p 密码 source_db &lt; source_db.sql</span><br></pre></td></tr></table></figure>
+
+
+]]></content>
+      <categories>
+        <category>-运维</category>
+      </categories>
+  </entry>
+  <entry>
     <title>启用ssh 证书登录</title>
     <url>/2024/08/15/sshLogin/</url>
     <content><![CDATA[<p>默认情况下，ssh 登录需要输入密码，为了提高安全性，可以使用证书登录</p>
@@ -106,6 +98,11 @@
       <categories>
         <category>-运维</category>
       </categories>
+  </entry>
+  <entry>
+    <title></title>
+    <url>/2024/08/16/hexoinstll/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>yum 锁定问题</title>
@@ -127,7 +124,7 @@
   <entry>
     <title>为域名申请SSL证书</title>
     <url>/2024/08/16/sslfordomain/</url>
-    <content><![CDATA[<h2 id="申请SSL证书"><a href="#申请SSL证书" class="headerlink" title="申请SSL证书"></a>申请SSL证书</h2><p><a href="https://zerossl.com/">https://zerossl.com/</a><br>这个服务商支持90天免费证书，可以申请一个证书，然后下载证书文件，然后在服务器上配置证书即可。<br>同时他支持Ip地址验证，可以通过验证ip地址来申请证书，这样就不需要域名了。<br>第一次申请应该需要注册一个账号，然后登录</p>
+    <content><![CDATA[<p><a href="https://zerossl.com/">https://zerossl.com/</a><br>这个服务商支持90天免费证书，可以申请一个证书，然后下载证书文件，然后在服务器上配置证书即可。<br>同时他支持Ip地址验证，可以通过验证ip地址来申请证书，这样就不需要域名了。<br>第一次申请应该需要注册一个账号，然后登录</p>
 <span id="more"></span>
 <h3 id="申请证书"><a href="#申请证书" class="headerlink" title="申请证书"></a>申请证书</h3><p>进入<a href="https://zerossl.com/">https://zerossl.com/</a> 后,登录<br><img src="/images/ssl1.png" alt="image"></p>
 ]]></content>
@@ -136,22 +133,25 @@
       </categories>
   </entry>
   <entry>
-    <title>软件的 GP 公钥不匹配问题</title>
-    <url>/2024/08/15/gpgErr/</url>
-    <content><![CDATA[<p>在安装 MySQL 软件包时，系统找不到与该软件包匹配的 GPG 公钥，从而无法验证包的完整性,出现以下报错信息：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Failing package is: mysql-community-server-5.7.44-1.el7.x86_64</span><br><span class="line">GPG Keys are configured as: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-mysql</span><br></pre></td></tr></table></figure>
+    <title>frida安装</title>
+    <url>/2024/08/11/frida%E5%AE%89%E8%A3%85/</url>
+    <content><![CDATA[<h2 id="安装frida客户端"><a href="#安装frida客户端" class="headerlink" title="安装frida客户端"></a>安装frida客户端</h2><p>客户端安装在上位机，就是负责给手机下发命令的电脑</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ pip install frida-tools</span><br></pre></td></tr></table></figure>
+<p>查看版本</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ frida --version</span><br></pre></td></tr></table></figure>
+<p>我这边的版本是16.4.7,对应的frida-server版本也要选择是16.4.7</p>
+<h2 id="安装frida-server"><a href="#安装frida-server" class="headerlink" title="安装frida-server"></a>安装frida-server</h2><p>服务端安装在手机上，就是负责接收上位机下发的命令的手机</p>
 <span id="more"></span>
-<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><h3 id="1-查看已安装的-GPG-公钥"><a href="#1-查看已安装的-GPG-公钥" class="headerlink" title="1, 查看已安装的 GPG 公钥"></a>1, 查看已安装的 GPG 公钥</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rpm -qa gpg-pubkey</span><br></pre></td></tr></table></figure>
-<h3 id="2-查看软件包的-GPG-公钥"><a href="#2-查看软件包的-GPG-公钥" class="headerlink" title="2, 查看软件包的 GPG 公钥"></a>2, 查看软件包的 GPG 公钥</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rpm -q gpg-pubkey --qf <span class="string">&#x27;%&#123;name&#125;-%&#123;version&#125;-%&#123;release&#125; --&gt; %&#123;summary&#125;\n&#x27;</span></span><br></pre></td></tr></table></figure>
-<h3 id="3-导入软件包的-GPG-公钥"><a href="#3-导入软件包的-GPG-公钥" class="headerlink" title="3, 导入软件包的 GPG 公钥"></a>3, 导入软件包的 GPG 公钥</h3><p>在&#x2F;etc&#x2F;pki&#x2F;rpm-gpg&#x2F; 查看是否有对应的 GPG 公钥文件，如果没有，可以从官方网站下载对应的 GPG 公钥文件，然后导入。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-mysql</span><br></pre></td></tr></table></figure>
-<h3 id="4-重新安装软件包"><a href="#4-重新安装软件包" class="headerlink" title="4, 重新安装软件包"></a>4, 重新安装软件包</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum reinstall mysql-community-server</span><br></pre></td></tr></table></figure>
-<h3 id="5-禁用-GPG-检查"><a href="#5-禁用-GPG-检查" class="headerlink" title="5,禁用 GPG 检查"></a>5,禁用 GPG 检查</h3><p>如果实在没办法导入 GPG 公钥，可以禁用 GPG 检查，但是不推荐。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum install mysql-community-server --nogpgcheck</span><br></pre></td></tr></table></figure>
-
+<p>下载地址：<a href="https://github.com/frida/frida/releases">https://github.com/frida/frida/releases</a><br>除了版本，还要注意手机的架构, 查看手机架构的方法</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"> adb shell getprop ro.product.cpu.abi</span><br><span class="line"> 或者</span><br><span class="line">adb shell <span class="built_in">uname</span> -m</span><br></pre></td></tr></table></figure>
+<p>我这边的手机是x86,所以我要下载x86版本的frida-server: frida-server-16.4.7-android-x86.xz</p>
+<p>下载对应版本的frida-server，然后上传到手机</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ adb push frida-server /data/local/tmp //这里要注意，为什么存放路径是/data/local/tmp，\n因为这个路径是手机的临时目录，</span><br><span class="line">不需要root权限，而且具有执行权限,一开始我放到/sdcard/目录下，一直报权限不足</span><br><span class="line"></span><br><span class="line">$ adb shell <span class="string">&quot;chmod 755 /data/local/tmp/frida-server&quot;</span></span><br><span class="line">$ adb shell <span class="string">&quot;/data/local/tmp/frida-server &amp;&quot;</span></span><br></pre></td></tr></table></figure>
+<p>测试是否安装成功</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ frida-ps -U</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
-        <category>-运维</category>
+        <category>逆向 - Frida</category>
       </categories>
   </entry>
 </search>
