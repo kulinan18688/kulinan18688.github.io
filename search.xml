@@ -1,24 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>软件的 GP 公钥不匹配问题</title>
-    <url>/2024/08/15/gpgErr/</url>
-    <content><![CDATA[<p>在安装 MySQL 软件包时，系统找不到与该软件包匹配的 GPG 公钥，从而无法验证包的完整性,出现以下报错信息：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Failing package is: mysql-community-server-5.7.44-1.el7.x86_64</span><br><span class="line">GPG Keys are configured as: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-mysql</span><br></pre></td></tr></table></figure>
-<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><h3 id="1-查看已安装的-GPG-公钥"><a href="#1-查看已安装的-GPG-公钥" class="headerlink" title="1, 查看已安装的 GPG 公钥"></a>1, 查看已安装的 GPG 公钥</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rpm -qa gpg-pubkey</span><br></pre></td></tr></table></figure>
-<h3 id="2-查看软件包的-GPG-公钥"><a href="#2-查看软件包的-GPG-公钥" class="headerlink" title="2, 查看软件包的 GPG 公钥"></a>2, 查看软件包的 GPG 公钥</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rpm -q gpg-pubkey --qf <span class="string">&#x27;%&#123;name&#125;-%&#123;version&#125;-%&#123;release&#125; --&gt; %&#123;summary&#125;\n&#x27;</span></span><br></pre></td></tr></table></figure>
-<h3 id="3-导入软件包的-GPG-公钥"><a href="#3-导入软件包的-GPG-公钥" class="headerlink" title="3, 导入软件包的 GPG 公钥"></a>3, 导入软件包的 GPG 公钥</h3><p>在&#x2F;etc&#x2F;pki&#x2F;rpm-gpg&#x2F; 查看是否有对应的 GPG 公钥文件，如果没有，可以从官方网站下载对应的 GPG 公钥文件，然后导入。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-mysql</span><br></pre></td></tr></table></figure>
-<h3 id="4-重新安装软件包"><a href="#4-重新安装软件包" class="headerlink" title="4, 重新安装软件包"></a>4, 重新安装软件包</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum reinstall mysql-community-server</span><br></pre></td></tr></table></figure>
-<h3 id="5-禁用-GPG-检查"><a href="#5-禁用-GPG-检查" class="headerlink" title="5,禁用 GPG 检查"></a>5,禁用 GPG 检查</h3><p>如果实在没办法导入 GPG 公钥，可以禁用 GPG 检查，但是不推荐。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum install mysql-community-server --nogpgcheck</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>-运维</category>
-      </categories>
-  </entry>
-  <entry>
     <title>frida安装</title>
     <url>/2024/08/11/frida%E5%AE%89%E8%A3%85/</url>
     <content><![CDATA[<h2 id="安装frida客户端"><a href="#安装frida客户端" class="headerlink" title="安装frida客户端"></a>安装frida客户端</h2><p>客户端安装在上位机，就是负责给手机下发命令的电脑</p>
@@ -41,6 +23,29 @@
       </categories>
   </entry>
   <entry>
+    <title></title>
+    <url>/2024/08/16/hexoinstll/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>软件的 GP 公钥不匹配问题</title>
+    <url>/2024/08/15/gpgErr/</url>
+    <content><![CDATA[<p>在安装 MySQL 软件包时，系统找不到与该软件包匹配的 GPG 公钥，从而无法验证包的完整性,出现以下报错信息：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Failing package is: mysql-community-server-5.7.44-1.el7.x86_64</span><br><span class="line">GPG Keys are configured as: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-mysql</span><br></pre></td></tr></table></figure>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><h3 id="1-查看已安装的-GPG-公钥"><a href="#1-查看已安装的-GPG-公钥" class="headerlink" title="1, 查看已安装的 GPG 公钥"></a>1, 查看已安装的 GPG 公钥</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rpm -qa gpg-pubkey</span><br></pre></td></tr></table></figure>
+<h3 id="2-查看软件包的-GPG-公钥"><a href="#2-查看软件包的-GPG-公钥" class="headerlink" title="2, 查看软件包的 GPG 公钥"></a>2, 查看软件包的 GPG 公钥</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rpm -q gpg-pubkey --qf <span class="string">&#x27;%&#123;name&#125;-%&#123;version&#125;-%&#123;release&#125; --&gt; %&#123;summary&#125;\n&#x27;</span></span><br></pre></td></tr></table></figure>
+<h3 id="3-导入软件包的-GPG-公钥"><a href="#3-导入软件包的-GPG-公钥" class="headerlink" title="3, 导入软件包的 GPG 公钥"></a>3, 导入软件包的 GPG 公钥</h3><p>在&#x2F;etc&#x2F;pki&#x2F;rpm-gpg&#x2F; 查看是否有对应的 GPG 公钥文件，如果没有，可以从官方网站下载对应的 GPG 公钥文件，然后导入。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-mysql</span><br></pre></td></tr></table></figure>
+<h3 id="4-重新安装软件包"><a href="#4-重新安装软件包" class="headerlink" title="4, 重新安装软件包"></a>4, 重新安装软件包</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum reinstall mysql-community-server</span><br></pre></td></tr></table></figure>
+<h3 id="5-禁用-GPG-检查"><a href="#5-禁用-GPG-检查" class="headerlink" title="5,禁用 GPG 检查"></a>5,禁用 GPG 检查</h3><p>如果实在没办法导入 GPG 公钥，可以禁用 GPG 检查，但是不推荐。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum install mysql-community-server --nogpgcheck</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>-运维</category>
+      </categories>
+  </entry>
+  <entry>
     <title>mysqldump备份数据库</title>
     <url>/2024/08/15/mysqldump/</url>
     <content><![CDATA[<p>我们可以使用mysqldump命令备份MySQL数据库，mysqldump是MySQL数据库备份工具，可以将数据库备份为SQL文件，然后可以使用这个SQL文件恢复数据库。</p>
@@ -58,40 +63,6 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql -u 用户名 -p 密码 source_db &lt; source_db.sql</span><br></pre></td></tr></table></figure>
 
 
-]]></content>
-      <categories>
-        <category>-运维</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>yum 锁定问题</title>
-    <url>/2024/08/15/yumErr/</url>
-    <content><![CDATA[<p>当正在使用yum安装软件时，突然中断，再次使用yum安装软件时，会出现yum锁定问题，解决方法如下：</p>
-<h3 id="报错信息"><a href="#报错信息" class="headerlink" title="报错信息"></a>报错信息</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Another app is currently holding the yum lock; waiting <span class="keyword">for</span> it to <span class="built_in">exit</span>...</span><br><span class="line">  The other application is: yum</span><br><span class="line">    Memory :  74 M RSS (398 MB VSZ)</span><br><span class="line">    Started: Thu Aug 15 08:54:53 2024 - 1:28:07 ago</span><br><span class="line">    State  : Sleeping, pid: 22963</span><br></pre></td></tr></table></figure>
-<h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h3><h4 id="1-查看yum进程"><a href="#1-查看yum进程" class="headerlink" title="1, 查看yum进程"></a>1, 查看yum进程</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ps -ef | grep yum</span><br></pre></td></tr></table></figure>
-<h4 id="2-杀掉yum进程"><a href="#2-杀掉yum进程" class="headerlink" title="2, 杀掉yum进程"></a>2, 杀掉yum进程</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">kill</span> -9 22963</span><br></pre></td></tr></table></figure>
-<h4 id="3-删除yum锁文件"><a href="#3-删除yum锁文件" class="headerlink" title="3, 删除yum锁文件"></a>3, 删除yum锁文件</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">rm</span> -f /var/run/yum.pid</span><br></pre></td></tr></table></figure>
-<h4 id="4-清理yum缓存"><a href="#4-清理yum缓存" class="headerlink" title="4, 清理yum缓存"></a>4, 清理yum缓存</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum clean all</span><br></pre></td></tr></table></figure>
-<h4 id="5-更新yum缓存"><a href="#5-更新yum缓存" class="headerlink" title="5, 更新yum缓存"></a>5, 更新yum缓存</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum makecache</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>-运维</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>启用ssh 证书登录</title>
-    <url>/2024/08/15/sshLogin/</url>
-    <content><![CDATA[<p>默认情况下，ssh 登录需要输入密码，为了提高安全性，可以使用证书登录</p>
-<h2 id="1-生成密钥对"><a href="#1-生成密钥对" class="headerlink" title="1, 生成密钥对"></a>1, 生成密钥对</h2><p>在本地机器上生成密钥对，公钥和私钥，公钥用于上传到服务器，私钥用于本地登录</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br></pre></td></tr></table></figure>
-<p>这个命令会生成一个公钥（<del>&#x2F;.ssh&#x2F;id_rsa.pub）和一个私钥（</del>&#x2F;.ssh&#x2F;id_rsa）</p>
-<h2 id="2-上传公钥到服务器"><a href="#2-上传公钥到服务器" class="headerlink" title="2, 上传公钥到服务器"></a>2, 上传公钥到服务器</h2><p>将公钥上传到服务器，可以使用scp命令</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">scp ~/.ssh/id_rsa.pub root@xxxxx:/root</span><br></pre></td></tr></table></figure>
-<h2 id="3-将公钥添加到服务器的authorized-keys文件"><a href="#3-将公钥添加到服务器的authorized-keys文件" class="headerlink" title="3, 将公钥添加到服务器的authorized_keys文件"></a>3, 将公钥添加到服务器的authorized_keys文件</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys</span><br></pre></td></tr></table></figure>
-<h2 id="4-修改sshd-config文件"><a href="#4-修改sshd-config文件" class="headerlink" title="4, 修改sshd_config文件"></a>4, 修改sshd_config文件</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim /etc/ssh/sshd_config</span><br><span class="line">PubkeyAuthentication <span class="built_in">yes</span></span><br><span class="line">PasswordAuthentication no</span><br><span class="line">ChallengeResponseAuthentication no</span><br><span class="line">UsePAM no</span><br></pre></td></tr></table></figure>
-
-<h2 id="5-重启sshd服务"><a href="#5-重启sshd服务" class="headerlink" title="5, 重启sshd服务"></a>5, 重启sshd服务</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl restart sshd</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>-运维</category>
@@ -128,6 +99,50 @@
 <h3 id="2-5-设置安全选项"><a href="#2-5-设置安全选项" class="headerlink" title="2.5 设置安全选项"></a>2.5 设置安全选项</h3><pre><code>使用mysql_secure_installation命令来配置安全设置（例如修改密码、删除匿名用户等）
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> mysql_secure_installation</span><br></pre></td></tr></table></figure>
 </code></pre>
+]]></content>
+      <categories>
+        <category>-运维</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>启用ssh 证书登录</title>
+    <url>/2024/08/15/sshLogin/</url>
+    <content><![CDATA[<p>默认情况下，ssh 登录需要输入密码，为了提高安全性，可以使用证书登录</p>
+<h2 id="1-生成密钥对"><a href="#1-生成密钥对" class="headerlink" title="1, 生成密钥对"></a>1, 生成密钥对</h2><p>在本地机器上生成密钥对，公钥和私钥，公钥用于上传到服务器，私钥用于本地登录</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br></pre></td></tr></table></figure>
+<p>这个命令会生成一个公钥（<del>&#x2F;.ssh&#x2F;id_rsa.pub）和一个私钥（</del>&#x2F;.ssh&#x2F;id_rsa）</p>
+<h2 id="2-上传公钥到服务器"><a href="#2-上传公钥到服务器" class="headerlink" title="2, 上传公钥到服务器"></a>2, 上传公钥到服务器</h2><p>将公钥上传到服务器，可以使用scp命令</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">scp ~/.ssh/id_rsa.pub root@xxxxx:/root</span><br></pre></td></tr></table></figure>
+<h2 id="3-将公钥添加到服务器的authorized-keys文件"><a href="#3-将公钥添加到服务器的authorized-keys文件" class="headerlink" title="3, 将公钥添加到服务器的authorized_keys文件"></a>3, 将公钥添加到服务器的authorized_keys文件</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys</span><br></pre></td></tr></table></figure>
+<h2 id="4-修改sshd-config文件"><a href="#4-修改sshd-config文件" class="headerlink" title="4, 修改sshd_config文件"></a>4, 修改sshd_config文件</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim /etc/ssh/sshd_config</span><br><span class="line">PubkeyAuthentication <span class="built_in">yes</span></span><br><span class="line">PasswordAuthentication no</span><br><span class="line">ChallengeResponseAuthentication no</span><br><span class="line">UsePAM no</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-重启sshd服务"><a href="#5-重启sshd服务" class="headerlink" title="5, 重启sshd服务"></a>5, 重启sshd服务</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl restart sshd</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>-运维</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>为域名申请SSL证书</title>
+    <url>/2024/08/16/sslfordomain/</url>
+    <content><![CDATA[<h2 id="申请SSL证书"><a href="#申请SSL证书" class="headerlink" title="申请SSL证书"></a>申请SSL证书</h2><p><a href="https://zerossl.com/">https://zerossl.com/</a><br>这个服务商支持90天免费证书，可以申请一个证书，然后下载证书文件，然后在服务器上配置证书即可。<br>同时他支持Ip地址验证，可以通过验证ip地址来申请证书，这样就不需要域名了。<br>第一次申请应该需要注册一个账号，然后登录</p>
+<h3 id="申请证书"><a href="#申请证书" class="headerlink" title="申请证书"></a>申请证书</h3><p>进入<a href="https://zerossl.com/">https://zerossl.com/</a> 后,登录<br><img src="/images/ssl/1.png" alt="image"></p>
+]]></content>
+      <categories>
+        <category>-运维</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>yum 锁定问题</title>
+    <url>/2024/08/15/yumErr/</url>
+    <content><![CDATA[<p>当正在使用yum安装软件时，突然中断，再次使用yum安装软件时，会出现yum锁定问题，解决方法如下：</p>
+<h3 id="报错信息"><a href="#报错信息" class="headerlink" title="报错信息"></a>报错信息</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Another app is currently holding the yum lock; waiting <span class="keyword">for</span> it to <span class="built_in">exit</span>...</span><br><span class="line">  The other application is: yum</span><br><span class="line">    Memory :  74 M RSS (398 MB VSZ)</span><br><span class="line">    Started: Thu Aug 15 08:54:53 2024 - 1:28:07 ago</span><br><span class="line">    State  : Sleeping, pid: 22963</span><br></pre></td></tr></table></figure>
+<h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h3><h4 id="1-查看yum进程"><a href="#1-查看yum进程" class="headerlink" title="1, 查看yum进程"></a>1, 查看yum进程</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ps -ef | grep yum</span><br></pre></td></tr></table></figure>
+<h4 id="2-杀掉yum进程"><a href="#2-杀掉yum进程" class="headerlink" title="2, 杀掉yum进程"></a>2, 杀掉yum进程</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">kill</span> -9 22963</span><br></pre></td></tr></table></figure>
+<h4 id="3-删除yum锁文件"><a href="#3-删除yum锁文件" class="headerlink" title="3, 删除yum锁文件"></a>3, 删除yum锁文件</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">rm</span> -f /var/run/yum.pid</span><br></pre></td></tr></table></figure>
+<h4 id="4-清理yum缓存"><a href="#4-清理yum缓存" class="headerlink" title="4, 清理yum缓存"></a>4, 清理yum缓存</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum clean all</span><br></pre></td></tr></table></figure>
+<h4 id="5-更新yum缓存"><a href="#5-更新yum缓存" class="headerlink" title="5, 更新yum缓存"></a>5, 更新yum缓存</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum makecache</span><br></pre></td></tr></table></figure>
+
 ]]></content>
       <categories>
         <category>-运维</category>

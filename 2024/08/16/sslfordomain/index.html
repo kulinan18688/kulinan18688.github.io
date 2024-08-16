@@ -21,19 +21,21 @@
     var CONFIG = {"hostname":"kulinan18688.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","page":true,"padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="默认情况下，ssh 登录需要输入密码，为了提高安全性，可以使用证书登录 1, 生成密钥对在本地机器上生成密钥对，公钥和私钥，公钥用于上传到服务器，私钥用于本地登录 1ssh-keygen -t rsa 这个命令会生成一个公钥（&#x2F;.ssh&#x2F;id_rsa.pub）和一个私钥（&#x2F;.ssh&#x2F;id_rsa） 2, 上传公钥到服务器将公钥上传到服务器，可以使用scp命令">
+  <meta name="description" content="申请SSL证书https:&#x2F;&#x2F;zerossl.com&#x2F;这个服务商支持90天免费证书，可以申请一个证书，然后下载证书文件，然后在服务器上配置证书即可。同时他支持Ip地址验证，可以通过验证ip地址来申请证书，这样就不需要域名了。第一次申请应该需要注册一个账号，然后登录 申请证书进入https:&#x2F;&#x2F;zerossl.com&#x2F; 后,登录">
 <meta property="og:type" content="article">
-<meta property="og:title" content="启用ssh 证书登录">
-<meta property="og:url" content="https://kulinan18688.github.io/2024/08/15/sshLogin/index.html">
+<meta property="og:title" content="为域名申请SSL证书">
+<meta property="og:url" content="https://kulinan18688.github.io/2024/08/16/sslfordomain/index.html">
 <meta property="og:site_name" content="老兵之家">
-<meta property="og:description" content="默认情况下，ssh 登录需要输入密码，为了提高安全性，可以使用证书登录 1, 生成密钥对在本地机器上生成密钥对，公钥和私钥，公钥用于上传到服务器，私钥用于本地登录 1ssh-keygen -t rsa 这个命令会生成一个公钥（&#x2F;.ssh&#x2F;id_rsa.pub）和一个私钥（&#x2F;.ssh&#x2F;id_rsa） 2, 上传公钥到服务器将公钥上传到服务器，可以使用scp命令">
+<meta property="og:description" content="申请SSL证书https:&#x2F;&#x2F;zerossl.com&#x2F;这个服务商支持90天免费证书，可以申请一个证书，然后下载证书文件，然后在服务器上配置证书即可。同时他支持Ip地址验证，可以通过验证ip地址来申请证书，这样就不需要域名了。第一次申请应该需要注册一个账号，然后登录 申请证书进入https:&#x2F;&#x2F;zerossl.com&#x2F; 后,登录">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-08-15T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-08-16T00:05:16.514Z">
+<meta property="og:image" content="https://kulinan18688.github.io/images/ssl/1.png">
+<meta property="article:published_time" content="2024-08-16T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-08-16T01:12:38.632Z">
 <meta property="article:author" content="不死老兵">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://kulinan18688.github.io/images/ssl/1.png">
 
-<link rel="canonical" href="https://kulinan18688.github.io/2024/08/15/sshLogin/">
+<link rel="canonical" href="https://kulinan18688.github.io/2024/08/16/sslfordomain/">
 
 
 <script id="page-configurations">
@@ -46,7 +48,7 @@
   };
 </script>
 
-  <title>启用ssh 证书登录 | 老兵之家</title>
+  <title>为域名申请SSL证书 | 老兵之家</title>
   
 
 
@@ -184,7 +186,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://kulinan18688.github.io/2024/08/15/sshLogin/">
+    <link itemprop="mainEntityOfPage" href="https://kulinan18688.github.io/2024/08/16/sslfordomain/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.png">
@@ -197,7 +199,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          启用ssh 证书登录
+          为域名申请SSL证书
         </h1>
 
         <div class="post-meta">
@@ -206,10 +208,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2024-08-16 00:00:00 / 修改时间：08:05:16" itemprop="dateCreated datePublished" datetime="2024-08-16T00:00:00+08:00">2024-08-16</time>
+              <time title="创建时间：2024-08-17 00:00:00" itemprop="dateCreated datePublished" datetime="2024-08-17T00:00:00+08:00">2024-08-17</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-08-16 09:12:38" itemprop="dateModified" datetime="2024-08-16T09:12:38+08:00">2024-08-16</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -231,16 +239,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>默认情况下，ssh 登录需要输入密码，为了提高安全性，可以使用证书登录</p>
-<h2 id="1-生成密钥对"><a href="#1-生成密钥对" class="headerlink" title="1, 生成密钥对"></a>1, 生成密钥对</h2><p>在本地机器上生成密钥对，公钥和私钥，公钥用于上传到服务器，私钥用于本地登录</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br></pre></td></tr></table></figure>
-<p>这个命令会生成一个公钥（<del>&#x2F;.ssh&#x2F;id_rsa.pub）和一个私钥（</del>&#x2F;.ssh&#x2F;id_rsa）</p>
-<h2 id="2-上传公钥到服务器"><a href="#2-上传公钥到服务器" class="headerlink" title="2, 上传公钥到服务器"></a>2, 上传公钥到服务器</h2><p>将公钥上传到服务器，可以使用scp命令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp ~/.ssh/id_rsa.pub root@xxxxx:/root</span><br></pre></td></tr></table></figure>
-<h2 id="3-将公钥添加到服务器的authorized-keys文件"><a href="#3-将公钥添加到服务器的authorized-keys文件" class="headerlink" title="3, 将公钥添加到服务器的authorized_keys文件"></a>3, 将公钥添加到服务器的authorized_keys文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys</span><br></pre></td></tr></table></figure>
-<h2 id="4-修改sshd-config文件"><a href="#4-修改sshd-config文件" class="headerlink" title="4, 修改sshd_config文件"></a>4, 修改sshd_config文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/ssh/sshd_config</span><br><span class="line">PubkeyAuthentication <span class="built_in">yes</span></span><br><span class="line">PasswordAuthentication no</span><br><span class="line">ChallengeResponseAuthentication no</span><br><span class="line">UsePAM no</span><br></pre></td></tr></table></figure>
-
-<h2 id="5-重启sshd服务"><a href="#5-重启sshd服务" class="headerlink" title="5, 重启sshd服务"></a>5, 重启sshd服务</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart sshd</span><br></pre></td></tr></table></figure>
+        <h2 id="申请SSL证书"><a href="#申请SSL证书" class="headerlink" title="申请SSL证书"></a>申请SSL证书</h2><p><a target="_blank" rel="noopener" href="https://zerossl.com/">https://zerossl.com/</a><br>这个服务商支持90天免费证书，可以申请一个证书，然后下载证书文件，然后在服务器上配置证书即可。<br>同时他支持Ip地址验证，可以通过验证ip地址来申请证书，这样就不需要域名了。<br>第一次申请应该需要注册一个账号，然后登录</p>
+<h3 id="申请证书"><a href="#申请证书" class="headerlink" title="申请证书"></a>申请证书</h3><p>进入<a target="_blank" rel="noopener" href="https://zerossl.com/">https://zerossl.com/</a> 后,登录<br><img src="/images/ssl/1.png" alt="image"></p>
 
     </div>
 
@@ -256,13 +256,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2024/08/15/yumErr/" rel="prev" title="yum 锁定问题">
-      <i class="fa fa-chevron-left"></i> yum 锁定问题
+    <a href="/2024/08/16/hexoinstll/" rel="prev" title="">
+      <i class="fa fa-chevron-left"></i> 
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2024/08/15/mysqldump/" rel="next" title="mysqldump备份数据库">
-      mysqldump备份数据库 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -321,7 +318,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E7%94%9F%E6%88%90%E5%AF%86%E9%92%A5%E5%AF%B9"><span class="nav-number">1.</span> <span class="nav-text">1, 生成密钥对</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E4%B8%8A%E4%BC%A0%E5%85%AC%E9%92%A5%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">2.</span> <span class="nav-text">2, 上传公钥到服务器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%B0%86%E5%85%AC%E9%92%A5%E6%B7%BB%E5%8A%A0%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84authorized-keys%E6%96%87%E4%BB%B6"><span class="nav-number">3.</span> <span class="nav-text">3, 将公钥添加到服务器的authorized_keys文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E4%BF%AE%E6%94%B9sshd-config%E6%96%87%E4%BB%B6"><span class="nav-number">4.</span> <span class="nav-text">4, 修改sshd_config文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E9%87%8D%E5%90%AFsshd%E6%9C%8D%E5%8A%A1"><span class="nav-number">5.</span> <span class="nav-text">5, 重启sshd服务</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%B3%E8%AF%B7SSL%E8%AF%81%E4%B9%A6"><span class="nav-number">1.</span> <span class="nav-text">申请SSL证书</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%B3%E8%AF%B7%E8%AF%81%E4%B9%A6"><span class="nav-number">1.1.</span> <span class="nav-text">申请证书</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
