@@ -66,9 +66,12 @@
       </categories>
   </entry>
   <entry>
-    <title></title>
-    <url>/2024/08/16/hexoinstll/</url>
+    <title>centos 服务器安装</title>
+    <url>/2024/08/14/hexoinstll/</url>
     <content><![CDATA[]]></content>
+      <categories>
+        <category>-运维</category>
+      </categories>
   </entry>
   <entry>
     <title>centos 服务器安装</title>
@@ -165,6 +168,94 @@
 ]]></content>
       <categories>
         <category>-运维</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>arm汇编学习笔记0</title>
+    <url>/2024/09/06/arm_example0/</url>
+    <content><![CDATA[<p>最新在学习arm汇编，经过全网搜索，决定以ARM Assembly By Example 这本书为主线进行学习，这里记录一下学习笔记。</p>
+<h2 id="安装arm汇编编环境"><a href="#安装arm汇编编环境" class="headerlink" title="安装arm汇编编环境"></a>安装arm汇编编环境</h2><p>arm架构有32位和64位之分。下面分别介绍如何安装32位和64位的arm汇编编译器。由于我习惯用mac，所以这里只介绍mac下的安装方法。</p>
+<h3 id="32位-arm汇编编译器安装"><a href="#32位-arm汇编编译器安装" class="headerlink" title="32位 arm汇编编译器安装"></a>32位 arm汇编编译器安装</h3><h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">在arm的官网https://developer.arm.com/downloads/-/gnu-rm 下载对应的版本，这里我下载的是10.3-2021.10版本</span><br><span class="line">https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.10/gcc-arm-none-eabi-10.3-2021.10-mac.tar.bz2?rev=58ed196feb7b4ada8288ea521fa87ad5&amp;<span class="built_in">hash</span>=F095D2C3D1659B531BE482826BE4A6E1</span><br></pre></td></tr></table></figure>
+<p>下载完成后，解压到指定目录<br>tar -xvf gcc-arm-none-eabi-10.3-2021.10-mac.tar.bz2 -C &#x2F;usr&#x2F;local<br>把解压后的目录加入到环境变量</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim ~/.zshrc</span><br><span class="line">在文件末尾加入</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/usr/local/gcc-arm-none-eabi-10.3-2021.10/bin</span><br></pre></td></tr></table></figure>
+<p>这样就可以在终端使用arm-none-eabi-as和arm-none-eabi-ld命令了</p>
+<h4 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">目录里：</span><br><span class="line">/bin/arm-none-eabi-as //汇编器</span><br><span class="line">/bin/arm-none-eabi-ld //链接器</span><br><span class="line">就是我们需要的工具,可以通过下面的命令编译汇编文件，链接文件得到可以执行的文件hello</span><br><span class="line">下面是一个简单的基于32位arm的汇编文件,暂不理会其内容，只是用来测试编译器是否安装成功</span><br><span class="line">``` bash</span><br><span class="line">.global _start</span><br><span class="line"></span><br><span class="line">.text</span><br><span class="line">_start:</span><br><span class="line">    MOV R0, <span class="comment">#1         // 将R0寄存器设置为1 (stdout)</span></span><br><span class="line">    LDR R1, =message   // 将消息的地址加载到R1</span><br><span class="line">    MOV R2, <span class="comment">#13        // 设置消息的长度 (13字节)</span></span><br><span class="line">    MOV R7, <span class="comment">#4         // 系统调用号 (sys_write)</span></span><br><span class="line">    SWI 0              // 触发系统调用</span><br><span class="line"></span><br><span class="line">    MOV R7, <span class="comment">#1         // 系统调用号 (sys_exit)</span></span><br><span class="line">    SWI 0              // 触发系统调用</span><br><span class="line"></span><br><span class="line">.data</span><br><span class="line">message:</span><br><span class="line">    .ascii <span class="string">&quot;Hello, ARM!\n&quot;</span></span><br></pre></td></tr></table></figure>
+<p>arm-none-eabi-as -o hello.o hello.s &#x2F;&#x2F;编译汇编文件<br>arm-none-eabi-ld -o hello hello.o &#x2F;&#x2F;链接文件</p>
+<h3 id="64位-arm汇编编译器安装"><a href="#64位-arm汇编编译器安装" class="headerlink" title="64位 arm汇编编译器安装"></a>64位 arm汇编编译器安装</h3><h4 id="安装-1"><a href="#安装-1" class="headerlink" title="安装"></a>安装</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew install aarch64-linux-gnu-gcc</span><br></pre></td></tr></table></figure>
+<p> aarch64-elf-as &#x2F;&#x2F;汇编器<br> aarch64-elf-ld &#x2F;&#x2F;链接器</p>
+<h4 id="测试-1"><a href="#测试-1" class="headerlink" title="测试"></a>测试</h4><p> 以下是一个简单的基于65位arm的汇编文件,暂不理会其内容，只是用来测试编译器是否安装成功</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">.global _start</span><br><span class="line"></span><br><span class="line">.text</span><br><span class="line">_start:</span><br><span class="line">    MOV X0, <span class="comment">#1         // 将X0寄存器设置为1 (stdout)</span></span><br><span class="line">    LDR X1, =message   // 将消息的地址加载到X1</span><br><span class="line">    MOV X2, <span class="comment">#13        // 设置消息的长度 (13字节)</span></span><br><span class="line">    MOV X8, <span class="comment">#64        // 系统调用号 (sys_write)</span></span><br><span class="line">    SVC 0              // 触发系统调用</span><br><span class="line"></span><br><span class="line">    MOV X8, <span class="comment">#93        // 系统调用号 (sys_exit)</span></span><br><span class="line">    SVC 0              // 触发系统调用</span><br><span class="line"></span><br><span class="line">.data</span><br><span class="line">message:</span><br><span class="line">    .ascii <span class="string">&quot;Hello, ARM!\n&quot;</span></span><br></pre></td></tr></table></figure>
+<p>执行以下命令,得到可以在arm64架构上运行的hello文件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">aarch64-elf-as -o hello.o hello.s //编译汇编文件</span><br><span class="line">aarch64-elf-ld -o hello hello.o //链接文件</span><br></pre></td></tr></table></figure>
+<h2 id="在mac中使用qemu模拟运行arm程序"><a href="#在mac中使用qemu模拟运行arm程序" class="headerlink" title="在mac中使用qemu模拟运行arm程序"></a>在mac中使用qemu模拟运行arm程序</h2><p>上面我们已知道了如何编译arm汇编文件，但是我们的mac是x86架构的，无法直接运行arm程序，这里我们使用qemu模拟器来运行arm程序<br>我将使用docker来安装qemu，这样可以避免一些不必要的麻烦</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker pull multiarch/qemu-user-static //首先，拉取包含 QEMU 用户模式仿真工具的 multiarch/qemu-user-static 镜像</span><br><span class="line">docker run --<span class="built_in">rm</span> --privileged multiarch/qemu-user-static --reset -p <span class="built_in">yes</span> //然后，运行容器以启用 QEMU 用户模式仿真,--privileged 选项是为了允许 QEMU 在主机系统上设置仿真。</span><br><span class="line">docker pull arm64v8/ubuntu //拉取你需要运行的架构的基础镜像。例如，如果你想运行 ARM64 程序，可以拉取 ARM64 的 Ubuntu 镜像</span><br><span class="line">docker run --<span class="built_in">rm</span> -t arm64v8/ubuntu <span class="built_in">uname</span> -m //这个命令会输出当前系统的架构。你应该看到输出为 aarch64，表示 QEMU 正在仿真 ARM64 架构。</span><br><span class="line">docker run --<span class="built_in">rm</span> -it -v $(<span class="built_in">pwd</span>)/hello1:/hello1 arm64v8/ubuntu /bin/bash //运行一个新容器，将你的程序挂载到容器中</span><br></pre></td></tr></table></figure>
+<p>执行完上面的命令后，你会进入到一个ubuntu的容器中，这时候你可以执行下面的命令来运行你的arm程序</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">./hello</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>汇编</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>记一次安卓root</title>
+    <url>/2024/08/11/anroidroot/</url>
+    <content><![CDATA[<h2 id="下载镜像"><a href="#下载镜像" class="headerlink" title="下载镜像"></a>下载镜像</h2><p> 我的手机是pixel3，所以我下载了对应的镜像，下载地址：<a href="https://developers.google.com/android/images?hl=zh-cn#blueline">https://developers.google.com/android/images?hl=zh-cn#blueline</a></p>
+]]></content>
+      <categories>
+        <category>逆向</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>记一次安卓编译过程</title>
+    <url>/2024/08/19/oldandroidapp/</url>
+    <content><![CDATA[<p>因为接手一个老项目，需要对安卓项目进行编译，但是项目中的很多依赖已经过时，官方库已经删除,当中遇到很多问题。这里记录一下编译过程。</p>
+<h2 id="Java版本问题"><a href="#Java版本问题" class="headerlink" title="Java版本问题"></a>Java版本问题</h2><h3 id="gradlew-build-出现以下错误"><a href="#gradlew-build-出现以下错误" class="headerlink" title="gradlew build  出现以下错误"></a>gradlew build  出现以下错误</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">Could not initialize class org.codehaus.groovy.classgen.Verifier</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">java.lang.NoClassDefFoundError: Could not initialize class org.codehaus.groovy.vmplugin.v7.Java7</span><br></pre></td></tr></table></figure>
+
+<p>这通常与 Gradle 使用的 JDK 版本和Gradle不兼容有关。Gradle 5.0 以上版本需要 JDK 8 或更高版本。可以通过修改 gradle-wrapper.properties 文件中的 distributionUrl 来指定 JDK 版本。</p>
+<p>java -version</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">查找java8huo java11的路径</span><br></pre></td></tr></table></figure>
+<p>修改gradle.properties文件</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">org.gradle.java.home=/path/to/java8_or_java11</span><br></pre></td></tr></table></figure>
+<h3 id="在android-studio中出现-Unsupported-Java"><a href="#在android-studio中出现-Unsupported-Java" class="headerlink" title="在android studio中出现 Unsupported Java."></a>在android studio中出现 Unsupported Java.</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">Unsupported Java. </span><br><span class="line">Your build is currently configured to use Java 17.0.6 and Gradle 5.6.4.</span><br></pre></td></tr></table></figure>
+<p>解决方法，需要在andori studio中修改jdk版本</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">可以手动打开 JDK 设置：</span><br><span class="line">转到 File &gt; Settings（在 macOS 上为 Android Studio &gt; Preferences）。</span><br><span class="line">在左侧导航栏中找到 Build, Execution, Deployment &gt; Build Tools &gt; Gradle。</span><br><span class="line">在 Gradle 设置页面上，你可以选择项目使用的 JDK 版本。</span><br><span class="line">检查和修改 JDK 路径：</span><br><span class="line">在 Gradle JDK 下拉菜单中选择兼容的 JDK 版本（推荐使用 Java 8 或 Java 11，如果你使用 Gradle 5.6.4）。</span><br><span class="line">设置完成后，点击 Apply，然后点击 OK。</span><br></pre></td></tr></table></figure>
+<p><img src="/images/gradelsdk.png" alt="image"></p>
+<h2 id="修改gradle版本"><a href="#修改gradle版本" class="headerlink" title="修改gradle版本"></a>修改gradle版本</h2><p>对于老项目，gradle版本可能比较老，需要修改gradle版本</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">在gradle-wrapper.properties文件中修改gradle版本</span><br><span class="line">distributionUrl=https\://services.gradle.org/distributions/gradle-5.6.4-all.zip //修改为5.6.4</span><br></pre></td></tr></table></figure>
+
+<h2 id="旧版本依赖问题"><a href="#旧版本依赖问题" class="headerlink" title="旧版本依赖问题"></a>旧版本依赖问题</h2><p>这次编译遇到的anko库,在官方库中已经删除,处理了很久，这里记录一下解决方法。</p>
+<h3 id="手动下载jar包或者aar包-本地引用"><a href="#手动下载jar包或者aar包-本地引用" class="headerlink" title="手动下载jar包或者aar包,本地引用"></a>手动下载jar包或者aar包,本地引用</h3><h4 id="flatDir-方式"><a href="#flatDir-方式" class="headerlink" title="flatDir 方式"></a>flatDir 方式</h4><p>1,将编译好的 .jar 或 .aar 文件放到你项目的 libs 文件夹中<br>2,在你的 build.gradle 文件中添加如下代码</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">allprojects &#123;</span><br><span class="line">    repositories &#123;</span><br><span class="line">        flatDir &#123;</span><br><span class="line">            dirs &#x27;libs&#x27;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>3, 在app的build.gradle中添加</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">    implementation(name: &#x27;anko-sdk15-0.10.8&#x27;, ext: &#x27;aar&#x27;)</span><br><span class="line">&#125;</span><br><span class="line">或者</span><br><span class="line">dependencies &#123;</span><br><span class="line">    implementation files(&#x27;libs/anko-sdk15-0.10.8.aar&#x27;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="使用-mavenLocal-和-mvn-install-方法"><a href="#使用-mavenLocal-和-mvn-install-方法" class="headerlink" title="使用 mavenLocal 和 mvn install 方法"></a>使用 mavenLocal 和 mvn install 方法</h4><p>1, 安装 AAR 到本地 Maven 仓库：<br>在 mvn install:install-file 命令中，参数-Dfile 是指 AAR 文件的路径，可以是相对路径或者绝对路径。-DgroupId 和 -DartifactId 是 Maven 中用来唯一标识项目的坐标，你可以根据项目的情况来设置这些值。</p>
+<p>参数解释：<br>-Dfile：指向你要安装的 AAR 文件的路径，可以是绝对路径或相对路径。<br>绝对路径：如 &#x2F;Users&#x2F;username&#x2F;project&#x2F;libs&#x2F;your-library.aar<br>相对路径：如 libs&#x2F;your-library.aar<br>-DgroupId：是库的分组ID，用于组织库，可以根据你的项目来命名。例如，如果你正在处理一个自定义库，可以使用类似 com.example.mylibrary 这样的命名。通常，这与组织或公司名相关。</p>
+<p>-DartifactId：是库的工件ID，一般是库的名称。例如，如果你正在处理一个名为 anko-commons 的库，那么 artifactId 可以是 anko-commons。</p>
+<p>-Dversion：库的版本号，可以设置为你需要的任何版本。例如，0.10.8。</p>
+<p>-Dpackaging&#x3D;aar：指明文件类型为 aar。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">mvn install:install-file -Dfile=anko-sdk15-0.10.8.aar -DgroupId=org.jetbrains.anko -DartifactId=anko-sdk15 -Dversion=0.10.8 -Dpackaging=aar</span><br></pre></td></tr></table></figure>
+<p>2,引入本地maven库</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">allprojects &#123;</span><br><span class="line">    repositories &#123;</span><br><span class="line">        mavenLocal()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>3,在app的build.gradle中添加</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">    implementation &#x27;org.jetbrains.anko:anko-sdk15:0.10.8&#x27;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="最终解决办法"><a href="#最终解决办法" class="headerlink" title="最终解决办法"></a>最终解决办法</h4><p>终于找到了阿里的maven库，可以直接引用; 阿里这回值得表扬一下，提供了很多老的依赖库，可以直接引用。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">allprojects &#123;</span><br><span class="line">    repositories &#123;</span><br><span class="line">        maven &#123; url &#x27;https://maven.aliyun.com/repository/public&#x27; &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">    implementation &#x27;org.jetbrains.anko:anko-sdk15:0.10.8&#x27;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Kotlin-版本冲突"><a href="#Kotlin-版本冲突" class="headerlink" title="Kotlin 版本冲突"></a>Kotlin 版本冲突</h2><p>在编译过程中，遇到了kotlin版本冲突问题</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"> Task :app:compileDebugKotlin FAILED</span><br><span class="line">w: Runtime JAR files in the classpath should have the same version. These files were found in the classpath:</span><br><span class="line">w: Consider providing an explicit dependency on kotlin-reflect 1.3 to prevent strange errors</span><br><span class="line">w: Some runtime JAR files in the classpath have an incompatible version. Consider removing them from the classpath</span><br></pre></td></tr></table></figure>
+<p>解决方法，在项目的 build.gradle 中统一 Kotlin 版本</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">buildscript &#123;</span><br><span class="line">    ext.kotlin_version = &#x27;1.3.72&#x27;</span><br><span class="line">    dependencies &#123;</span><br><span class="line">        classpath &quot;org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="解决jre7问题"><a href="#解决jre7问题" class="headerlink" title="解决jre7问题"></a>解决jre7问题</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">FAILURE: Build failed with an exception.</span><br><span class="line"></span><br><span class="line">* What went wrong:</span><br><span class="line">Could not determine the dependencies of task &#x27;:app:lintVitalRelease&#x27;.</span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">Could not resolve all artifacts <span class="keyword">for</span> configuration <span class="string">&#x27;:app:debugCompileClasspath&#x27;</span>.</span></span><br><span class="line"><span class="meta prompt_">   &gt; </span><span class="language-bash">Could not find org.jetbrains.kotlin:kotlin-stdlib-jre7:1.3.50.</span></span><br><span class="line">     Required by:</span><br><span class="line">         project :app &gt; com.twisty:interlude:1.0.2</span><br></pre></td></tr></table></figure>
+<p>出现以上的错误 ，是因为项目中引用了 kotlin-stdlib-jre7，但是在maven中找不到这个库，需要修改为 kotlin-stdlib-jdk7<br>解决方法，在项目的 build.gradle 中添加以下代码,这段代码会将所有对 kotlin-stdlib-jre7 的请求重定向到 kotlin-stdlib-jdk7。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">configurations.all &#123;</span><br><span class="line">    resolutionStrategy.eachDependency &#123; details -&gt;</span><br><span class="line">        if (details.requested.name == &quot;kotlin-stdlib-jre7&quot;) &#123;</span><br><span class="line">            details.useTarget(&quot;org.jetbrains.kotlin:kotlin-stdlib-jdk7:$&#123;details.requested.version&#125;&quot;)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+]]></content>
+      <categories>
+        <category>-android</category>
       </categories>
   </entry>
 </search>
