@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"kulinan18688.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","page":true,"padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="本系列文章以64位arm架构(aarch64)为主线,会穿插些32位arm架构的内容和对比。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="arm汇编学习笔记1">
+<meta property="og:url" content="https://kulinan18688.github.io/2024/09/09/arm_example1/index.html">
+<meta property="og:site_name" content="老兵之家">
+<meta property="og:description" content="本系列文章以64位arm架构(aarch64)为主线,会穿插些32位arm架构的内容和对比。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-09-09T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-09-11T11:12:13.631Z">
+<meta property="article:author" content="不死老兵">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://kulinan18688.github.io/2024/09/09/arm_example1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>arm汇编学习笔记1 | 老兵之家</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">老兵之家</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://kulinan18688.github.io/2024/09/09/arm_example1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="不死老兵">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="老兵之家">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          arm汇编学习笔记1
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-09-10 00:00:00" itemprop="dateCreated datePublished" datetime="2024-09-10T00:00:00+08:00">2024-09-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-09-11 19:12:13" itemprop="dateModified" datetime="2024-09-11T19:12:13+08:00">2024-09-11</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%B1%87%E7%BC%96/" itemprop="url" rel="index"><span itemprop="name">汇编</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本系列文章以64位arm架构(aarch64)为主线,会穿插些32位arm架构的内容和对比。</p>
+<span id="more"></span>
+<h2 id="寄存器"><a href="#寄存器" class="headerlink" title="寄存器"></a>寄存器</h2><p>对于现代的64位ARM架构，通常寄存器的命名为 x0 到 x31。64位处理器有更多的通用寄存器，<br>因此扩展到了 31 个通用寄存器，加上一个特殊的寄存器（x30），通常用于存储返回地址。<br>如果你使用的是 AArch64 架构（64位的ARM架构），则寄存器会分为以下两种命名方式：<br>x0 到 x31：用于64位操作，表示64位宽的寄存器。<br>w0 到 w31：用于32位操作，表示寄存器的低32位。<br>在64位ARM架构中，寄存器的命名方式为 x0 到 x31，而在32位ARM架构中，寄存器的命名方式为 r0 到 r15。</p>
+<h2 id="汇编指令"><a href="#汇编指令" class="headerlink" title="汇编指令"></a>汇编指令</h2><p>基本上有三种类型的助记符或操作码。（Rd &#x3D; 目标寄存器，Rn &#x3D; 源寄存器，op2 可以是寄存器或立即数）</p>
+<p>一些操作码不生成结果： opcode Rn, op2<br>一些操作码仅处理单个寄存器： opcode Rd, op2<br>一些操作码根据源数据生成结果： opcode Rd, Rn, op2</p>
+<h3 id="不生成结果的操作码"><a href="#不生成结果的操作码" class="headerlink" title="不生成结果的操作码"></a>不生成结果的操作码</h3><p> 这些操作码通常是执行某种操作，但没有输出结果。例如，我们可以使用 比较指令 (cmp)，它只是比较两个寄存器或一个寄存器与立即数的值，但不会产生结果存储在某个寄存器中。</p>
+<figure class="highlight arm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmp</span> <span class="built_in">x0</span>, <span class="built_in">x1</span>  <span class="comment">// 比较 x0 和 x1 的值，不生成结果，只设置标志位</span></span><br></pre></td></tr></table></figure>
+<h3 id="仅处理单个寄存器的操作码"><a href="#仅处理单个寄存器的操作码" class="headerlink" title="仅处理单个寄存器的操作码"></a>仅处理单个寄存器的操作码</h3><p>这些操作码对一个寄存器或立即数执行操作，但只涉及一个目标寄存器。常见的操作是将一个值加载到寄存器中。</p>
+<figure class="highlight arm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">mov</span> <span class="built_in">x0</span>, <span class="number">#5</span>  <span class="comment">// 将立即数 5 移动到寄存器 x0</span></span><br></pre></td></tr></table></figure>
+<h3 id="根据源数据生成结果的操作码"><a href="#根据源数据生成结果的操作码" class="headerlink" title="根据源数据生成结果的操作码"></a>根据源数据生成结果的操作码</h3><p>这些操作码通常涉及两个寄存器和一个目标寄存器。例如，我们可以使用 加法指令 (add)，它将两个寄存器的值相加，并将结果存储在目标寄存器中。</p>
+<figure class="highlight arm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">add</span> <span class="built_in">x0</span>, <span class="built_in">x1</span>, <span class="built_in">x2</span>  <span class="comment">// 将 x1 和 x2 的值相加，并将结果存储在 x0 中</span></span><br></pre></td></tr></table></figure>
+<h2 id="立即数"><a href="#立即数" class="headerlink" title="立即数"></a>立即数</h2><p>立即数以 # 号开头，后接单引号中的字符或二进制、八进制、十进制或十六进制数字<br>在32位ARM架构中，立即数的范围是 0 到 255，而在64位ARM架构中，立即数的范围是 0 到 4095。<br>可以使用0到255(32位处理器)之间的整数<br>可以使用0到4095(64位处理器)之间的整数<br>单引号中的ASCII字符</p>
+<p>在64位ARM架构中,关于立即数,限制不同于传统的 ARM 32 位架构。具体来说，在 AArch64 中，立即数的范围和格式取决于指令类型。</p>
+<h3 id="1-算术和逻辑指令（加法、减法、按位与等）"><a href="#1-算术和逻辑指令（加法、减法、按位与等）" class="headerlink" title="1. 算术和逻辑指令（加法、减法、按位与等）"></a>1. 算术和逻辑指令（加法、减法、按位与等）</h3><p>对于加法 (add)、减法 (sub) 和按位与 (and) 等算术和逻辑操作的指令，立即数有特定的编码规则。它们的立即数并不是简单的 0 到 255，而是通过一个 可旋转的 12 位 数字来表示。因此，在 AArch64 中，立即数并不仅限于 0 到 255，而是可以表示更大、更复杂的数值。</p>
+<p>例如，add 或 sub 指令的立即数范围可以表示成 12 位的无符号数（0 到 4095），并且可以在某些指令中通过移位操作扩展。</p>
+<figure class="highlight arm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">add</span> <span class="built_in">x0</span>, <span class="built_in">x1</span>, <span class="number">#4095</span>  <span class="comment">// 将 x1 的值加上立即数 4095，结果存储在 x0 中</span></span><br></pre></td></tr></table></figure>
+<h3 id="2-逻辑移位指令（左移、右移、循环移位等）"><a href="#2-逻辑移位指令（左移、右移、循环移位等）" class="headerlink" title="2. 逻辑移位指令（左移、右移、循环移位等）"></a>2. 逻辑移位指令（左移、右移、循环移位等）</h3><p>对于某些按位逻辑操作（例如 orr 或 eor），AArch64 允许立即数的表示更为复杂。立即数可以是一个 32 位或 64 位的模式，由少量的可变参数决定。这种设计使得可以表示非常灵活的立即数。</p>
+<figure class="highlight arm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">orr</span> <span class="built_in">x0</span>, <span class="built_in">x1</span>, <span class="number">#0xFF</span>  <span class="comment">// 将 x1 按位或上 0xFF，结果存储在 x0 中</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-加载指令（如-ldr）"><a href="#3-加载指令（如-ldr）" class="headerlink" title="3. 加载指令（如 ldr）"></a>3. 加载指令（如 ldr）</h3><p>在加载指令中，立即数可以用来表示内存地址的偏移量，并且这个偏移量也有特定的编码范围，通常远超过 255。例如：</p>
+<figure class="highlight arm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ldr</span> <span class="built_in">x0</span>, [<span class="built_in">x1</span>, <span class="number">#0x100</span>]  <span class="comment">// 从地址 x1 + 0x100 处加载数据到 x0 中</span></span><br></pre></td></tr></table></figure>
+<h3 id="4-MOV-指令的立即数"><a href="#4-MOV-指令的立即数" class="headerlink" title="4, MOV 指令的立即数"></a>4, MOV 指令的立即数</h3><p>mov 指令在 AArch64 中有时也能处理更大的立即数。例如，它可以加载 16 位的立即数到寄存器中，然后通过逻辑移位来扩展到 64 位。这使得 mov 能够加载的数值范围比 32 位 ARM 要大得多。</p>
+<p>示例：</p>
+<figure class="highlight arm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">mov</span> <span class="built_in">x0</span>, <span class="number">#0x1234</span>  <span class="comment">// 将立即数 0x1234 移动到 x0 中</span></span><br></pre></td></tr></table></figure>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>在 AArch64 中，立即数的范围和表示比 ARM 32 位架构更复杂，并不局限于 0 到 255。不同指令有不同的立即数编码规则和限制：</p>
+<p>对于大多数算术指令，立即数的范围可以达到 0 到 4095。<br>对于逻辑操作，立即数可以表示较为复杂的模式。<br>mov 指令能够处理更大的数值，具体取决于指令的移位和操作方式。<br>因此，AArch64 中的立即数灵活性更高，远远超出了 0 到 255 的范围。</p>
+<h2 id="补充知识-32位处理器和64位处理器的定义和区别"><a href="#补充知识-32位处理器和64位处理器的定义和区别" class="headerlink" title="补充知识: 32位处理器和64位处理器的定义和区别"></a>补充知识: 32位处理器和64位处理器的定义和区别</h2><p>通常所说的32位处理器和64位处理器，主要是根据处理器的寄存器宽度来定义的，<br>也就是处理器一次能够处理的数据的宽度（以位为单位）。<br>具体来说，32位或64位指的是处理器中通用寄存器的宽度，也就是一次能够操作的数据位数。</p>
+<h3 id="1-寄存器宽度"><a href="#1-寄存器宽度" class="headerlink" title="1. 寄存器宽度"></a>1. 寄存器宽度</h3><p>32位处理器的通用寄存器宽度为32位，这意味着它一次能够处理32位的数据；而64位处理器的通用寄存器宽度为64位，能够一次处理64位的数据。</p>
+<p>示例：<br>32位处理器：寄存器为32位宽，即每次操作32位（4字节）数据。<br>64位处理器：寄存器为64位宽，即每次操作64位（8字节）数据。</p>
+<h3 id="2-内存寻址能力"><a href="#2-内存寻址能力" class="headerlink" title="2. 内存寻址能力"></a>2. 内存寻址能力</h3><p>32位处理器 最多可以寻址 2^32 &#x3D; 4GB 的内存。<br>64位处理器 最多可以寻址 2^64 &#x3D; 16EB（Exabytes）的内存，但实际系统和操作系统的限制通常远小于这个数值。</p>
+<h3 id="3-指令集架构"><a href="#3-指令集架构" class="headerlink" title="3, 指令集架构"></a>3, 指令集架构</h3><p>32位和64位处理器在其<strong>指令集架构（ISA）</strong>方面也有所不同。64位处理器能够执行64位指令，处理更多的寄存器和更大的数据；<br>32位处理器只能处理32位的指令，限制了其并行处理能力和内存访问能力。</p>
+<h3 id="关于指令中l的立即数空间疑惑"><a href="#关于指令中l的立即数空间疑惑" class="headerlink" title="关于指令中l的立即数空间疑惑"></a>关于指令中l的立即数空间疑惑</h3><p>上面提到了立即数的范围，但是在32位处理器中，立即数的范围是0到255，而在64位处理器中，立即数的范围是0到4095。<br>他们的范围是根据什么来定义的呢？是根据处理器的位数来定义的吗？</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">答案:</span><br><span class="line">1. 32 位处理器立即数的来源</span><br><span class="line">在 32 位处理器（如 ARM 的 32 位架构）中，立即数的范围通常被限制在 0 到 255，这主要是由于以下原因：</span><br><span class="line"></span><br><span class="line">指令编码格式：ARM 32 位架构中的每条指令长度为 32 位，其中一部分位用于操作码（指令类型），一部分位用于寄存器编号，剩下的位用于表示立即数（也称为立即值，immediate value）。在这种情况下，立即数的位数被设计为 8 位，这就是为什么立即数被限制在 0 到 255（即 8 位无符号整数）。</span><br><span class="line">桶式移位器（barrel shifter）：为了提供更多的灵活性，ARM 架构允许立即数通过桶式移位器来进行移位，这样可以表示更多的数值。例如，立即数可以在 8 位基础上左移一定的位数，来扩大能够表示的数值范围。</span><br><span class="line">示例：</span><br><span class="line">ARM 32 位指令的立即数部分允许如下表示：</span><br><span class="line"></span><br><span class="line"><span class="comment">#255 是合法的立即数，因为它是 8 位以内的数。</span></span><br><span class="line"><span class="comment">#0xFF000000 是通过将 255 左移 24 位得到的数。</span></span><br><span class="line">总之，32 位处理器中立即数的 0 到 255 的范围来自于 8 位立即数限制，而不是直接由处理器的位宽决定的。</span><br><span class="line"></span><br><span class="line">2. 64 位处理器立即数的来源</span><br><span class="line">在 64 位处理器（如 ARM AArch64 架构）中，立即数的范围同样依赖于指令的设计，而不是简单地随着位宽增加而变大。64 位处理器的指令编码仍然是固定长度的（通常也是 32 位宽），因此立即数部分的位数依然受到限制。</span><br><span class="line"></span><br><span class="line">64 位处理器的不同立即数范围：</span><br><span class="line">算术和逻辑指令（如加法、减法、按位与等）：在 64 位架构的这些指令中，立即数部分通常是 12 位宽。因此，对于像 add、sub 等指令，立即数可以是 0 到 4095。</span><br><span class="line"></span><br><span class="line">逻辑移位和按位运算指令：有时，AArch64 的立即数还可以表示更复杂的值，例如使用旋转的立即数或特定模式。</span><br><span class="line"></span><br><span class="line">MOV 指令：可以将 16 位立即数加载到寄存器中，并通过移位将其扩展为 64 位，这样可以表示更大的数值。</span><br><span class="line"></span><br><span class="line">示例：</span><br><span class="line">add x0, x1, <span class="comment">#4095 允许立即数为 0 到 4095。</span></span><br><span class="line">mov x0, <span class="comment">#0x1234 允许 16 位立即数。</span></span><br><span class="line">总之，在 64 位处理器中，立即数的范围通常取决于具体的指令设计，而并非处理器的 64 位宽度直接决定立即数的大小。</span><br><span class="line"></span><br><span class="line">3. 指令长度的影响</span><br><span class="line">无论是 32 位还是 64 位处理器，大多数指令集（如 ARM）中指令的长度是固定的（例如，ARM 通常每条指令是 32 位宽），因此立即数的长度受到指令总长度的限制。为了将操作码、寄存器和立即数等信息都编码在一条指令中，立即数的位数通常较少。</span><br><span class="line"></span><br><span class="line">总结：</span><br><span class="line">在 32 位处理器 中，立即数范围通常为 0 到 255，这是因为指令格式中只有 8 位用于表示立即数（加上桶式移位器可以扩大表示范围）。</span><br><span class="line">在 64 位处理器 中，立即数的范围更大（通常 0 到 4095 或更多），但仍然受限于指令的设计，而不是处理器的 64 位宽度。</span><br><span class="line">立即数的空间由指令编码中的位数分配决定，而不是直接由处理器位宽决定。</span><br></pre></td></tr></table></figure>
+
+<h3 id="小结："><a href="#小结：" class="headerlink" title="小结："></a>小结：</h3><p>处理器位数（32位或64位） 是根据寄存器宽度来定义的，寄存器宽度决定了处理器一次能够处理的数据大小。<br>处理器的位数还影响到它的内存寻址能力，64位处理器可以寻址更大的内存空间。<br>数据总线宽度虽然相关，但并不是定义处理器位数的标准。<br>所以，通常我们所说的32位或64位处理器，主要是根据寄存器的位宽来定义的。</p>
+<h2 id="补充知识-16进制，10进制，2进制之间的转换"><a href="#补充知识-16进制，10进制，2进制之间的转换" class="headerlink" title="补充知识,16进制，10进制，2进制之间的转换"></a>补充知识,16进制，10进制，2进制之间的转换</h2><h3 id="基础转换规则"><a href="#基础转换规则" class="headerlink" title="基础转换规则"></a>基础转换规则</h3><p>基本的十六进制与二进制的转换规则。十六进制的每一位可以用 4 位二进制来表示，十六进制的每一位和其对应的 4 位二进制之间有固定的对应关系</p>
+<table>
+<thead>
+<tr>
+<th>十六进制</th>
+<th>二进制</th>
+<th>十进制</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>0000</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0001</td>
+<td>1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0010</td>
+<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0011</td>
+<td>3</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0100</td>
+<td>4</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0101</td>
+<td>5</td>
+</tr>
+<tr>
+<td>6</td>
+<td>0110</td>
+<td>6</td>
+</tr>
+<tr>
+<td>7</td>
+<td>0111</td>
+<td>7</td>
+</tr>
+<tr>
+<td>8</td>
+<td>1000</td>
+<td>8</td>
+</tr>
+<tr>
+<td>9</td>
+<td>1001</td>
+<td>9</td>
+</tr>
+<tr>
+<td>A</td>
+<td>1010</td>
+<td>10</td>
+</tr>
+<tr>
+<td>B</td>
+<td>1011</td>
+<td>11</td>
+</tr>
+<tr>
+<td>C</td>
+<td>1100</td>
+<td>12</td>
+</tr>
+<tr>
+<td>D</td>
+<td>1101</td>
+<td>13</td>
+</tr>
+<tr>
+<td>E</td>
+<td>1110</td>
+<td>14</td>
+</tr>
+<tr>
+<td>F</td>
+<td>1111</td>
+<td>15</td>
+</tr>
+</tbody></table>
+<p>十六进制每一位等于4 位二进制。<br>二进制4位可以快速转换为0-15的十进制数。</p>
+<h3 id="2-分段转换法"><a href="#2-分段转换法" class="headerlink" title="2. 分段转换法"></a>2. 分段转换法</h3><p>例子： 0xFFEA</p>
+<h4 id="每一位转换为二进制："><a href="#每一位转换为二进制：" class="headerlink" title="每一位转换为二进制："></a>每一位转换为二进制：</h4><ul>
+<li>F &#x3D; 1111（二进制）</li>
+<li>F &#x3D; 1111（二进制）</li>
+<li>E &#x3D; 1110（二进制）</li>
+<li>A &#x3D; 1010（二进制）</li>
+</ul>
+<p>所以 0xFFEA &#x3D; 1111 1111 1110 1010（二进制）。</p>
+<h4 id="二进制转十进制："><a href="#二进制转十进制：" class="headerlink" title="二进制转十进制："></a>二进制转十进制：</h4><p>直接将二进制按权相加：</p>
+<p>1111 1111 1110 1010 &#x3D; (1 × 2^15) + (1 × 2^14) + ⋯ + (1 × 2^1) + (0 × 2^0)</p>
+<p>为方便，你可以利用计算器或分步进行如下计算：</p>
+<p>0xFFEA &#x3D; (15 × 16^3) + (15 × 16^2) + (14 × 16^1) + (10 × 16^0)<br>       &#x3D; (15 × 4096) + (15 × 256) + (14 × 16) + (10 × 1)<br>       &#x3D; 61440 + 3840 + 224 + 10 &#x3D; 65514（十进制）。</p>
+<h3 id="常见值的记忆"><a href="#常见值的记忆" class="headerlink" title="常见值的记忆"></a>常见值的记忆</h3><p> 记住一些常见的十六进制和二进制、十进制的对应关系，比如：<br>0xFF &#x3D; 255（十进制），1111 1111（二进制）<br>0xF &#x3D; 15（十进制），1111（二进制）<br>0xA &#x3D; 10（十进制），1010（二进制</p>
+<h3 id="关于进制的一些基础概念"><a href="#关于进制的一些基础概念" class="headerlink" title="关于进制的一些基础概念"></a>关于进制的一些基础概念</h3><p>进制是一种数学计数法，用于表示数字的基数和权值。常见的进制有二进制、八进制、十进制和十六进制等。<br>深刻理解进制的概念，有助于我们更好地理解计算机中的数据表示和转换。非常有意义</p>
+<h4 id="基数"><a href="#基数" class="headerlink" title="基数"></a>基数</h4><p>十进制是以10为基数的系统，二进制是以2为基数的系统,以此类推。为了理解它们的对应关系，我们首先来看它们的基础概念。</p>
+<h5 id="1-十进制"><a href="#1-十进制" class="headerlink" title="1. 十进制"></a>1. 十进制</h5><ul>
+<li><p><strong>十进制使用 0 到 9 共 10 个数字，每一位表示一个数位，每一位的权重是 10 的幂次：</strong></p>
+<ul>
+<li><p>例如，十进制数 137 表示：</p>
+<p>137 &#x3D; (1 × 10²) + (3 × 10¹) + (7 × 10⁰)</p>
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="2-二进制"><a href="#2-二进制" class="headerlink" title="2. 二进制"></a>2. 二进制</h5><ul>
+<li><p><strong>二进制使用 0 和 1 两个数字，每一位的权重是 2 的幂次：</strong></p>
+<ul>
+<li><p>例如，二进制数 1011 表示：</p>
+<p>1011 &#x3D; (1 × 2³) + (0 × 2²) + (1 × 2¹) + (1 × 2⁰)</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="一个简单的例子"><a href="#一个简单的例子" class="headerlink" title="一个简单的例子"></a>一个简单的例子</h2><figure class="highlight arm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">.global</span> _start</span><br><span class="line"></span><br><span class="line"><span class="symbol">.text</span></span><br><span class="line"><span class="symbol">_start:</span></span><br><span class="line">    <span class="keyword">MOV</span> <span class="built_in">X0</span>, <span class="number">#1</span>         <span class="comment">// 将X0寄存器设置为1 (stdout)</span></span><br><span class="line">    <span class="keyword">LDR</span> <span class="built_in">X1</span>, <span class="symbol">=message</span>   <span class="comment">// 将消息的地址加载到X1</span></span><br><span class="line">    <span class="keyword">MOV</span> <span class="built_in">X2</span>, <span class="number">#13</span>        <span class="comment">// 设置消息的长度 (13字节)</span></span><br><span class="line">    <span class="keyword">MOV</span> <span class="built_in">X8</span>, <span class="number">#64</span>        <span class="comment">// 系统调用号 (sys_write)</span></span><br><span class="line">    <span class="keyword">SVC</span> <span class="number">0</span>              <span class="comment">// 触发系统调用</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">MOV</span> <span class="built_in">X8</span>, <span class="number">#93</span>        <span class="comment">// 系统调用号 (sys_exit)</span></span><br><span class="line">    <span class="keyword">SVC</span> <span class="number">0</span>              <span class="comment">// 触发系统调用</span></span><br><span class="line"></span><br><span class="line"><span class="symbol">.data</span></span><br><span class="line"><span class="symbol">message:</span></span><br><span class="line">    <span class="meta">.ascii</span> <span class="string">&quot;Hello, ARM!\n&quot;</span></span><br></pre></td></tr></table></figure>
+<p>这段代码的功能是输出 “Hello, ARM!” 并退出程序。下面是代码的执行过程：</p>
+<h3 id="代码解析"><a href="#代码解析" class="headerlink" title="代码解析"></a>代码解析</h3><p>.global _start<br>  @@global _start 指示链接器这个程序的入口点是 _start，即程序从这里开始执行。操作系统会寻找这个 _start 标签，作为程序执行的起点。<br>.text<br>  @@.text 表示接下来是代码段，所有的指令都将在这个段中执行。<br>_start:<br>  @@这是程序的入口，操作系统在加载程序时会跳到这个标签开始执行指令。</p>
+<h3 id="调用-sys-write-系统调用的过程："><a href="#调用-sys-write-系统调用的过程：" class="headerlink" title="调用 sys_write 系统调用的过程："></a>调用 sys_write 系统调用的过程：</h3><p>设置 X0：文件描述符（File Descriptor），1 表示标准输出（终端）。即 X0 &#x3D; 1 表示写入到终端（stdout）。<br>设置 X1：要写入的数据的地址，X1 中存放的是指向消息的内存地址。<br>设置 X2：要写入的数据的长度，X2 中存放的是数据的字节长度（例如，字符串的长度）。<br>设置 X8：X8 中存放的是系统调用号。sys_write 的调用号是 64，所以 X8 &#x3D; 64。<br>触发 SVC 0：SVC（Supervisor Call）用于触发系统调用。SVC 0 使处理器从用户态切换到内核态，执行指定的系统调用（这里是 sys_write）。<br>总结：<br>X0：文件描述符（1 表示写入到终端）。<br>X1：要写入的数据的内存地址。<br>X2：要写入的数据的长度。<br>X8：系统调用号，64 表示 sys_write。<br>SVC 0：触发系统调用，将上述寄存器的值传递给操作系统，由操作系统执行写入操作。<br>这个流程用于通过 sys_write 将数据输出到终端或其他文件描述符。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/09/06/arm_example0/" rel="prev" title="arm汇编学习笔记0">
+      <i class="fa fa-chevron-left"></i> arm汇编学习笔记0
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">1.</span> <span class="nav-text">寄存器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4"><span class="nav-number">2.</span> <span class="nav-text">汇编指令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E7%94%9F%E6%88%90%E7%BB%93%E6%9E%9C%E7%9A%84%E6%93%8D%E4%BD%9C%E7%A0%81"><span class="nav-number">2.1.</span> <span class="nav-text">不生成结果的操作码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%85%E5%A4%84%E7%90%86%E5%8D%95%E4%B8%AA%E5%AF%84%E5%AD%98%E5%99%A8%E7%9A%84%E6%93%8D%E4%BD%9C%E7%A0%81"><span class="nav-number">2.2.</span> <span class="nav-text">仅处理单个寄存器的操作码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B9%E6%8D%AE%E6%BA%90%E6%95%B0%E6%8D%AE%E7%94%9F%E6%88%90%E7%BB%93%E6%9E%9C%E7%9A%84%E6%93%8D%E4%BD%9C%E7%A0%81"><span class="nav-number">2.3.</span> <span class="nav-text">根据源数据生成结果的操作码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AB%8B%E5%8D%B3%E6%95%B0"><span class="nav-number">3.</span> <span class="nav-text">立即数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%AE%97%E6%9C%AF%E5%92%8C%E9%80%BB%E8%BE%91%E6%8C%87%E4%BB%A4%EF%BC%88%E5%8A%A0%E6%B3%95%E3%80%81%E5%87%8F%E6%B3%95%E3%80%81%E6%8C%89%E4%BD%8D%E4%B8%8E%E7%AD%89%EF%BC%89"><span class="nav-number">3.1.</span> <span class="nav-text">1. 算术和逻辑指令（加法、减法、按位与等）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E9%80%BB%E8%BE%91%E7%A7%BB%E4%BD%8D%E6%8C%87%E4%BB%A4%EF%BC%88%E5%B7%A6%E7%A7%BB%E3%80%81%E5%8F%B3%E7%A7%BB%E3%80%81%E5%BE%AA%E7%8E%AF%E7%A7%BB%E4%BD%8D%E7%AD%89%EF%BC%89"><span class="nav-number">3.2.</span> <span class="nav-text">2. 逻辑移位指令（左移、右移、循环移位等）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%8A%A0%E8%BD%BD%E6%8C%87%E4%BB%A4%EF%BC%88%E5%A6%82-ldr%EF%BC%89"><span class="nav-number">3.3.</span> <span class="nav-text">3. 加载指令（如 ldr）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-MOV-%E6%8C%87%E4%BB%A4%E7%9A%84%E7%AB%8B%E5%8D%B3%E6%95%B0"><span class="nav-number">3.4.</span> <span class="nav-text">4, MOV 指令的立即数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">3.5.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A1%A5%E5%85%85%E7%9F%A5%E8%AF%86-32%E4%BD%8D%E5%A4%84%E7%90%86%E5%99%A8%E5%92%8C64%E4%BD%8D%E5%A4%84%E7%90%86%E5%99%A8%E7%9A%84%E5%AE%9A%E4%B9%89%E5%92%8C%E5%8C%BA%E5%88%AB"><span class="nav-number">4.</span> <span class="nav-text">补充知识: 32位处理器和64位处理器的定义和区别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%AF%84%E5%AD%98%E5%99%A8%E5%AE%BD%E5%BA%A6"><span class="nav-number">4.1.</span> <span class="nav-text">1. 寄存器宽度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%86%85%E5%AD%98%E5%AF%BB%E5%9D%80%E8%83%BD%E5%8A%9B"><span class="nav-number">4.2.</span> <span class="nav-text">2. 内存寻址能力</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%8C%87%E4%BB%A4%E9%9B%86%E6%9E%B6%E6%9E%84"><span class="nav-number">4.3.</span> <span class="nav-text">3, 指令集架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E6%8C%87%E4%BB%A4%E4%B8%ADl%E7%9A%84%E7%AB%8B%E5%8D%B3%E6%95%B0%E7%A9%BA%E9%97%B4%E7%96%91%E6%83%91"><span class="nav-number">4.4.</span> <span class="nav-text">关于指令中l的立即数空间疑惑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93%EF%BC%9A"><span class="nav-number">4.5.</span> <span class="nav-text">小结：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A1%A5%E5%85%85%E7%9F%A5%E8%AF%86-16%E8%BF%9B%E5%88%B6%EF%BC%8C10%E8%BF%9B%E5%88%B6%EF%BC%8C2%E8%BF%9B%E5%88%B6%E4%B9%8B%E9%97%B4%E7%9A%84%E8%BD%AC%E6%8D%A2"><span class="nav-number">5.</span> <span class="nav-text">补充知识,16进制，10进制，2进制之间的转换</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E8%BD%AC%E6%8D%A2%E8%A7%84%E5%88%99"><span class="nav-number">5.1.</span> <span class="nav-text">基础转换规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%88%86%E6%AE%B5%E8%BD%AC%E6%8D%A2%E6%B3%95"><span class="nav-number">5.2.</span> <span class="nav-text">2. 分段转换法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AF%8F%E4%B8%80%E4%BD%8D%E8%BD%AC%E6%8D%A2%E4%B8%BA%E4%BA%8C%E8%BF%9B%E5%88%B6%EF%BC%9A"><span class="nav-number">5.2.1.</span> <span class="nav-text">每一位转换为二进制：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%8C%E8%BF%9B%E5%88%B6%E8%BD%AC%E5%8D%81%E8%BF%9B%E5%88%B6%EF%BC%9A"><span class="nav-number">5.2.2.</span> <span class="nav-text">二进制转十进制：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E5%80%BC%E7%9A%84%E8%AE%B0%E5%BF%86"><span class="nav-number">5.3.</span> <span class="nav-text">常见值的记忆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E8%BF%9B%E5%88%B6%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5"><span class="nav-number">5.4.</span> <span class="nav-text">关于进制的一些基础概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E6%95%B0"><span class="nav-number">5.4.1.</span> <span class="nav-text">基数</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-%E5%8D%81%E8%BF%9B%E5%88%B6"><span class="nav-number">5.4.1.1.</span> <span class="nav-text">1. 十进制</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-%E4%BA%8C%E8%BF%9B%E5%88%B6"><span class="nav-number">5.4.1.2.</span> <span class="nav-text">2. 二进制</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="nav-number">6.</span> <span class="nav-text">一个简单的例子</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E8%A7%A3%E6%9E%90"><span class="nav-number">6.1.</span> <span class="nav-text">代码解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E7%94%A8-sys-write-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E8%BF%87%E7%A8%8B%EF%BC%9A"><span class="nav-number">6.2.</span> <span class="nav-text">调用 sys_write 系统调用的过程：</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="不死老兵"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">不死老兵</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/kulinan18688" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;kulinan18688" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">不死老兵</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

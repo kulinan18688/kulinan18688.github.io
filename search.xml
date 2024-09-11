@@ -174,16 +174,18 @@
     <title>arm汇编学习笔记0</title>
     <url>/2024/09/06/arm_example0/</url>
     <content><![CDATA[<p>最新在学习arm汇编，经过全网搜索，决定以ARM Assembly By Example 这本书为主线进行学习，这里记录一下学习笔记。</p>
+<span id="more"></span>
 <h2 id="安装arm汇编编环境"><a href="#安装arm汇编编环境" class="headerlink" title="安装arm汇编编环境"></a>安装arm汇编编环境</h2><p>arm架构有32位和64位之分。下面分别介绍如何安装32位和64位的arm汇编编译器。由于我习惯用mac，所以这里只介绍mac下的安装方法。</p>
 <h3 id="32位-arm汇编编译器安装"><a href="#32位-arm汇编编译器安装" class="headerlink" title="32位 arm汇编编译器安装"></a>32位 arm汇编编译器安装</h3><h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">在arm的官网https://developer.arm.com/downloads/-/gnu-rm 下载对应的版本，这里我下载的是10.3-2021.10版本</span><br><span class="line">https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.10/gcc-arm-none-eabi-10.3-2021.10-mac.tar.bz2?rev=58ed196feb7b4ada8288ea521fa87ad5&amp;<span class="built_in">hash</span>=F095D2C3D1659B531BE482826BE4A6E1</span><br></pre></td></tr></table></figure>
 <p>下载完成后，解压到指定目录<br>tar -xvf gcc-arm-none-eabi-10.3-2021.10-mac.tar.bz2 -C &#x2F;usr&#x2F;local<br>把解压后的目录加入到环境变量</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim ~/.zshrc</span><br><span class="line">在文件末尾加入</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/usr/local/gcc-arm-none-eabi-10.3-2021.10/bin</span><br></pre></td></tr></table></figure>
 <p>这样就可以在终端使用arm-none-eabi-as和arm-none-eabi-ld命令了</p>
-<h4 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">目录里：</span><br><span class="line">/bin/arm-none-eabi-as //汇编器</span><br><span class="line">/bin/arm-none-eabi-ld //链接器</span><br><span class="line">就是我们需要的工具,可以通过下面的命令编译汇编文件，链接文件得到可以执行的文件hello</span><br><span class="line">下面是一个简单的基于32位arm的汇编文件,暂不理会其内容，只是用来测试编译器是否安装成功</span><br><span class="line">``` bash</span><br><span class="line">.global _start</span><br><span class="line"></span><br><span class="line">.text</span><br><span class="line">_start:</span><br><span class="line">    MOV R0, <span class="comment">#1         // 将R0寄存器设置为1 (stdout)</span></span><br><span class="line">    LDR R1, =message   // 将消息的地址加载到R1</span><br><span class="line">    MOV R2, <span class="comment">#13        // 设置消息的长度 (13字节)</span></span><br><span class="line">    MOV R7, <span class="comment">#4         // 系统调用号 (sys_write)</span></span><br><span class="line">    SWI 0              // 触发系统调用</span><br><span class="line"></span><br><span class="line">    MOV R7, <span class="comment">#1         // 系统调用号 (sys_exit)</span></span><br><span class="line">    SWI 0              // 触发系统调用</span><br><span class="line"></span><br><span class="line">.data</span><br><span class="line">message:</span><br><span class="line">    .ascii <span class="string">&quot;Hello, ARM!\n&quot;</span></span><br></pre></td></tr></table></figure>
+<h4 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h4><p>目录里：<br>&#x2F;bin&#x2F;arm-none-eabi-as &#x2F;&#x2F;汇编器<br>&#x2F;bin&#x2F;arm-none-eabi-ld &#x2F;&#x2F;链接器<br>就是我们需要的工具,可以通过下面的命令编译汇编文件，链接文件得到可以执行的文件hello<br>下面是一个简单的基于32位arm的汇编文件,暂不理会其内容，只是用来测试编译器是否安装成功</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">.global _start</span><br><span class="line"></span><br><span class="line">.text</span><br><span class="line">_start:</span><br><span class="line">    MOV R0, <span class="comment">#1         // 将R0寄存器设置为1 (stdout)</span></span><br><span class="line">    LDR R1, =message   // 将消息的地址加载到R1</span><br><span class="line">    MOV R2, <span class="comment">#13        // 设置消息的长度 (13字节)</span></span><br><span class="line">    MOV R7, <span class="comment">#4         // 系统调用号 (sys_write)</span></span><br><span class="line">    SWI 0              // 触发系统调用</span><br><span class="line"></span><br><span class="line">    MOV R7, <span class="comment">#1         // 系统调用号 (sys_exit)</span></span><br><span class="line">    SWI 0              // 触发系统调用</span><br><span class="line"></span><br><span class="line">.data</span><br><span class="line">message:</span><br><span class="line">    .ascii <span class="string">&quot;Hello, ARM!\n&quot;</span></span><br></pre></td></tr></table></figure>
 <p>arm-none-eabi-as -o hello.o hello.s &#x2F;&#x2F;编译汇编文件<br>arm-none-eabi-ld -o hello hello.o &#x2F;&#x2F;链接文件</p>
 <h3 id="64位-arm汇编编译器安装"><a href="#64位-arm汇编编译器安装" class="headerlink" title="64位 arm汇编编译器安装"></a>64位 arm汇编编译器安装</h3><h4 id="安装-1"><a href="#安装-1" class="headerlink" title="安装"></a>安装</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew install aarch64-linux-gnu-gcc</span><br></pre></td></tr></table></figure>
 <p> aarch64-elf-as &#x2F;&#x2F;汇编器<br> aarch64-elf-ld &#x2F;&#x2F;链接器</p>
-<h4 id="测试-1"><a href="#测试-1" class="headerlink" title="测试"></a>测试</h4><p> 以下是一个简单的基于65位arm的汇编文件,暂不理会其内容，只是用来测试编译器是否安装成功</p>
+<h4 id="测试-1"><a href="#测试-1" class="headerlink" title="测试"></a>测试</h4><p> 以下是一个简单的基于64位arm的汇编文件,暂不理会其内容，只是用来测试编译器是否安装成功</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">.global _start</span><br><span class="line"></span><br><span class="line">.text</span><br><span class="line">_start:</span><br><span class="line">    MOV X0, <span class="comment">#1         // 将X0寄存器设置为1 (stdout)</span></span><br><span class="line">    LDR X1, =message   // 将消息的地址加载到X1</span><br><span class="line">    MOV X2, <span class="comment">#13        // 设置消息的长度 (13字节)</span></span><br><span class="line">    MOV X8, <span class="comment">#64        // 系统调用号 (sys_write)</span></span><br><span class="line">    SVC 0              // 触发系统调用</span><br><span class="line"></span><br><span class="line">    MOV X8, <span class="comment">#93        // 系统调用号 (sys_exit)</span></span><br><span class="line">    SVC 0              // 触发系统调用</span><br><span class="line"></span><br><span class="line">.data</span><br><span class="line">message:</span><br><span class="line">    .ascii <span class="string">&quot;Hello, ARM!\n&quot;</span></span><br></pre></td></tr></table></figure>
 <p>执行以下命令,得到可以在arm64架构上运行的hello文件</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">aarch64-elf-as -o hello.o hello.s //编译汇编文件</span><br><span class="line">aarch64-elf-ld -o hello hello.o //链接文件</span><br></pre></td></tr></table></figure>
@@ -256,6 +258,177 @@
 ]]></content>
       <categories>
         <category>-android</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>arm汇编学习笔记1</title>
+    <url>/2024/09/09/arm_example1/</url>
+    <content><![CDATA[<p>本系列文章以64位arm架构(aarch64)为主线,会穿插些32位arm架构的内容和对比。</p>
+<span id="more"></span>
+<h2 id="寄存器"><a href="#寄存器" class="headerlink" title="寄存器"></a>寄存器</h2><p>对于现代的64位ARM架构，通常寄存器的命名为 x0 到 x31。64位处理器有更多的通用寄存器，<br>因此扩展到了 31 个通用寄存器，加上一个特殊的寄存器（x30），通常用于存储返回地址。<br>如果你使用的是 AArch64 架构（64位的ARM架构），则寄存器会分为以下两种命名方式：<br>x0 到 x31：用于64位操作，表示64位宽的寄存器。<br>w0 到 w31：用于32位操作，表示寄存器的低32位。<br>在64位ARM架构中，寄存器的命名方式为 x0 到 x31，而在32位ARM架构中，寄存器的命名方式为 r0 到 r15。</p>
+<h2 id="汇编指令"><a href="#汇编指令" class="headerlink" title="汇编指令"></a>汇编指令</h2><p>基本上有三种类型的助记符或操作码。（Rd &#x3D; 目标寄存器，Rn &#x3D; 源寄存器，op2 可以是寄存器或立即数）</p>
+<p>一些操作码不生成结果： opcode Rn, op2<br>一些操作码仅处理单个寄存器： opcode Rd, op2<br>一些操作码根据源数据生成结果： opcode Rd, Rn, op2</p>
+<h3 id="不生成结果的操作码"><a href="#不生成结果的操作码" class="headerlink" title="不生成结果的操作码"></a>不生成结果的操作码</h3><p> 这些操作码通常是执行某种操作，但没有输出结果。例如，我们可以使用 比较指令 (cmp)，它只是比较两个寄存器或一个寄存器与立即数的值，但不会产生结果存储在某个寄存器中。</p>
+<figure class="highlight arm"><table><tr><td class="code"><pre><span class="line"><span class="keyword">cmp</span> <span class="built_in">x0</span>, <span class="built_in">x1</span>  <span class="comment">// 比较 x0 和 x1 的值，不生成结果，只设置标志位</span></span><br></pre></td></tr></table></figure>
+<h3 id="仅处理单个寄存器的操作码"><a href="#仅处理单个寄存器的操作码" class="headerlink" title="仅处理单个寄存器的操作码"></a>仅处理单个寄存器的操作码</h3><p>这些操作码对一个寄存器或立即数执行操作，但只涉及一个目标寄存器。常见的操作是将一个值加载到寄存器中。</p>
+<figure class="highlight arm"><table><tr><td class="code"><pre><span class="line"><span class="keyword">mov</span> <span class="built_in">x0</span>, <span class="number">#5</span>  <span class="comment">// 将立即数 5 移动到寄存器 x0</span></span><br></pre></td></tr></table></figure>
+<h3 id="根据源数据生成结果的操作码"><a href="#根据源数据生成结果的操作码" class="headerlink" title="根据源数据生成结果的操作码"></a>根据源数据生成结果的操作码</h3><p>这些操作码通常涉及两个寄存器和一个目标寄存器。例如，我们可以使用 加法指令 (add)，它将两个寄存器的值相加，并将结果存储在目标寄存器中。</p>
+<figure class="highlight arm"><table><tr><td class="code"><pre><span class="line"><span class="keyword">add</span> <span class="built_in">x0</span>, <span class="built_in">x1</span>, <span class="built_in">x2</span>  <span class="comment">// 将 x1 和 x2 的值相加，并将结果存储在 x0 中</span></span><br></pre></td></tr></table></figure>
+<h2 id="立即数"><a href="#立即数" class="headerlink" title="立即数"></a>立即数</h2><p>立即数以 # 号开头，后接单引号中的字符或二进制、八进制、十进制或十六进制数字<br>在32位ARM架构中，立即数的范围是 0 到 255，而在64位ARM架构中，立即数的范围是 0 到 4095。<br>可以使用0到255(32位处理器)之间的整数<br>可以使用0到4095(64位处理器)之间的整数<br>单引号中的ASCII字符</p>
+<p>在64位ARM架构中,关于立即数,限制不同于传统的 ARM 32 位架构。具体来说，在 AArch64 中，立即数的范围和格式取决于指令类型。</p>
+<h3 id="1-算术和逻辑指令（加法、减法、按位与等）"><a href="#1-算术和逻辑指令（加法、减法、按位与等）" class="headerlink" title="1. 算术和逻辑指令（加法、减法、按位与等）"></a>1. 算术和逻辑指令（加法、减法、按位与等）</h3><p>对于加法 (add)、减法 (sub) 和按位与 (and) 等算术和逻辑操作的指令，立即数有特定的编码规则。它们的立即数并不是简单的 0 到 255，而是通过一个 可旋转的 12 位 数字来表示。因此，在 AArch64 中，立即数并不仅限于 0 到 255，而是可以表示更大、更复杂的数值。</p>
+<p>例如，add 或 sub 指令的立即数范围可以表示成 12 位的无符号数（0 到 4095），并且可以在某些指令中通过移位操作扩展。</p>
+<figure class="highlight arm"><table><tr><td class="code"><pre><span class="line"><span class="keyword">add</span> <span class="built_in">x0</span>, <span class="built_in">x1</span>, <span class="number">#4095</span>  <span class="comment">// 将 x1 的值加上立即数 4095，结果存储在 x0 中</span></span><br></pre></td></tr></table></figure>
+<h3 id="2-逻辑移位指令（左移、右移、循环移位等）"><a href="#2-逻辑移位指令（左移、右移、循环移位等）" class="headerlink" title="2. 逻辑移位指令（左移、右移、循环移位等）"></a>2. 逻辑移位指令（左移、右移、循环移位等）</h3><p>对于某些按位逻辑操作（例如 orr 或 eor），AArch64 允许立即数的表示更为复杂。立即数可以是一个 32 位或 64 位的模式，由少量的可变参数决定。这种设计使得可以表示非常灵活的立即数。</p>
+<figure class="highlight arm"><table><tr><td class="code"><pre><span class="line"><span class="keyword">orr</span> <span class="built_in">x0</span>, <span class="built_in">x1</span>, <span class="number">#0xFF</span>  <span class="comment">// 将 x1 按位或上 0xFF，结果存储在 x0 中</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-加载指令（如-ldr）"><a href="#3-加载指令（如-ldr）" class="headerlink" title="3. 加载指令（如 ldr）"></a>3. 加载指令（如 ldr）</h3><p>在加载指令中，立即数可以用来表示内存地址的偏移量，并且这个偏移量也有特定的编码范围，通常远超过 255。例如：</p>
+<figure class="highlight arm"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ldr</span> <span class="built_in">x0</span>, [<span class="built_in">x1</span>, <span class="number">#0x100</span>]  <span class="comment">// 从地址 x1 + 0x100 处加载数据到 x0 中</span></span><br></pre></td></tr></table></figure>
+<h3 id="4-MOV-指令的立即数"><a href="#4-MOV-指令的立即数" class="headerlink" title="4, MOV 指令的立即数"></a>4, MOV 指令的立即数</h3><p>mov 指令在 AArch64 中有时也能处理更大的立即数。例如，它可以加载 16 位的立即数到寄存器中，然后通过逻辑移位来扩展到 64 位。这使得 mov 能够加载的数值范围比 32 位 ARM 要大得多。</p>
+<p>示例：</p>
+<figure class="highlight arm"><table><tr><td class="code"><pre><span class="line"><span class="keyword">mov</span> <span class="built_in">x0</span>, <span class="number">#0x1234</span>  <span class="comment">// 将立即数 0x1234 移动到 x0 中</span></span><br></pre></td></tr></table></figure>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>在 AArch64 中，立即数的范围和表示比 ARM 32 位架构更复杂，并不局限于 0 到 255。不同指令有不同的立即数编码规则和限制：</p>
+<p>对于大多数算术指令，立即数的范围可以达到 0 到 4095。<br>对于逻辑操作，立即数可以表示较为复杂的模式。<br>mov 指令能够处理更大的数值，具体取决于指令的移位和操作方式。<br>因此，AArch64 中的立即数灵活性更高，远远超出了 0 到 255 的范围。</p>
+<h2 id="补充知识-32位处理器和64位处理器的定义和区别"><a href="#补充知识-32位处理器和64位处理器的定义和区别" class="headerlink" title="补充知识: 32位处理器和64位处理器的定义和区别"></a>补充知识: 32位处理器和64位处理器的定义和区别</h2><p>通常所说的32位处理器和64位处理器，主要是根据处理器的寄存器宽度来定义的，<br>也就是处理器一次能够处理的数据的宽度（以位为单位）。<br>具体来说，32位或64位指的是处理器中通用寄存器的宽度，也就是一次能够操作的数据位数。</p>
+<h3 id="1-寄存器宽度"><a href="#1-寄存器宽度" class="headerlink" title="1. 寄存器宽度"></a>1. 寄存器宽度</h3><p>32位处理器的通用寄存器宽度为32位，这意味着它一次能够处理32位的数据；而64位处理器的通用寄存器宽度为64位，能够一次处理64位的数据。</p>
+<p>示例：<br>32位处理器：寄存器为32位宽，即每次操作32位（4字节）数据。<br>64位处理器：寄存器为64位宽，即每次操作64位（8字节）数据。</p>
+<h3 id="2-内存寻址能力"><a href="#2-内存寻址能力" class="headerlink" title="2. 内存寻址能力"></a>2. 内存寻址能力</h3><p>32位处理器 最多可以寻址 2^32 &#x3D; 4GB 的内存。<br>64位处理器 最多可以寻址 2^64 &#x3D; 16EB（Exabytes）的内存，但实际系统和操作系统的限制通常远小于这个数值。</p>
+<h3 id="3-指令集架构"><a href="#3-指令集架构" class="headerlink" title="3, 指令集架构"></a>3, 指令集架构</h3><p>32位和64位处理器在其<strong>指令集架构（ISA）</strong>方面也有所不同。64位处理器能够执行64位指令，处理更多的寄存器和更大的数据；<br>32位处理器只能处理32位的指令，限制了其并行处理能力和内存访问能力。</p>
+<h3 id="关于指令中l的立即数空间疑惑"><a href="#关于指令中l的立即数空间疑惑" class="headerlink" title="关于指令中l的立即数空间疑惑"></a>关于指令中l的立即数空间疑惑</h3><p>上面提到了立即数的范围，但是在32位处理器中，立即数的范围是0到255，而在64位处理器中，立即数的范围是0到4095。<br>他们的范围是根据什么来定义的呢？是根据处理器的位数来定义的吗？</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">答案:</span><br><span class="line">1. 32 位处理器立即数的来源</span><br><span class="line">在 32 位处理器（如 ARM 的 32 位架构）中，立即数的范围通常被限制在 0 到 255，这主要是由于以下原因：</span><br><span class="line"></span><br><span class="line">指令编码格式：ARM 32 位架构中的每条指令长度为 32 位，其中一部分位用于操作码（指令类型），一部分位用于寄存器编号，剩下的位用于表示立即数（也称为立即值，immediate value）。在这种情况下，立即数的位数被设计为 8 位，这就是为什么立即数被限制在 0 到 255（即 8 位无符号整数）。</span><br><span class="line">桶式移位器（barrel shifter）：为了提供更多的灵活性，ARM 架构允许立即数通过桶式移位器来进行移位，这样可以表示更多的数值。例如，立即数可以在 8 位基础上左移一定的位数，来扩大能够表示的数值范围。</span><br><span class="line">示例：</span><br><span class="line">ARM 32 位指令的立即数部分允许如下表示：</span><br><span class="line"></span><br><span class="line"><span class="comment">#255 是合法的立即数，因为它是 8 位以内的数。</span></span><br><span class="line"><span class="comment">#0xFF000000 是通过将 255 左移 24 位得到的数。</span></span><br><span class="line">总之，32 位处理器中立即数的 0 到 255 的范围来自于 8 位立即数限制，而不是直接由处理器的位宽决定的。</span><br><span class="line"></span><br><span class="line">2. 64 位处理器立即数的来源</span><br><span class="line">在 64 位处理器（如 ARM AArch64 架构）中，立即数的范围同样依赖于指令的设计，而不是简单地随着位宽增加而变大。64 位处理器的指令编码仍然是固定长度的（通常也是 32 位宽），因此立即数部分的位数依然受到限制。</span><br><span class="line"></span><br><span class="line">64 位处理器的不同立即数范围：</span><br><span class="line">算术和逻辑指令（如加法、减法、按位与等）：在 64 位架构的这些指令中，立即数部分通常是 12 位宽。因此，对于像 add、sub 等指令，立即数可以是 0 到 4095。</span><br><span class="line"></span><br><span class="line">逻辑移位和按位运算指令：有时，AArch64 的立即数还可以表示更复杂的值，例如使用旋转的立即数或特定模式。</span><br><span class="line"></span><br><span class="line">MOV 指令：可以将 16 位立即数加载到寄存器中，并通过移位将其扩展为 64 位，这样可以表示更大的数值。</span><br><span class="line"></span><br><span class="line">示例：</span><br><span class="line">add x0, x1, <span class="comment">#4095 允许立即数为 0 到 4095。</span></span><br><span class="line">mov x0, <span class="comment">#0x1234 允许 16 位立即数。</span></span><br><span class="line">总之，在 64 位处理器中，立即数的范围通常取决于具体的指令设计，而并非处理器的 64 位宽度直接决定立即数的大小。</span><br><span class="line"></span><br><span class="line">3. 指令长度的影响</span><br><span class="line">无论是 32 位还是 64 位处理器，大多数指令集（如 ARM）中指令的长度是固定的（例如，ARM 通常每条指令是 32 位宽），因此立即数的长度受到指令总长度的限制。为了将操作码、寄存器和立即数等信息都编码在一条指令中，立即数的位数通常较少。</span><br><span class="line"></span><br><span class="line">总结：</span><br><span class="line">在 32 位处理器 中，立即数范围通常为 0 到 255，这是因为指令格式中只有 8 位用于表示立即数（加上桶式移位器可以扩大表示范围）。</span><br><span class="line">在 64 位处理器 中，立即数的范围更大（通常 0 到 4095 或更多），但仍然受限于指令的设计，而不是处理器的 64 位宽度。</span><br><span class="line">立即数的空间由指令编码中的位数分配决定，而不是直接由处理器位宽决定。</span><br></pre></td></tr></table></figure>
+
+<h3 id="小结："><a href="#小结：" class="headerlink" title="小结："></a>小结：</h3><p>处理器位数（32位或64位） 是根据寄存器宽度来定义的，寄存器宽度决定了处理器一次能够处理的数据大小。<br>处理器的位数还影响到它的内存寻址能力，64位处理器可以寻址更大的内存空间。<br>数据总线宽度虽然相关，但并不是定义处理器位数的标准。<br>所以，通常我们所说的32位或64位处理器，主要是根据寄存器的位宽来定义的。</p>
+<h2 id="补充知识-16进制，10进制，2进制之间的转换"><a href="#补充知识-16进制，10进制，2进制之间的转换" class="headerlink" title="补充知识,16进制，10进制，2进制之间的转换"></a>补充知识,16进制，10进制，2进制之间的转换</h2><h3 id="基础转换规则"><a href="#基础转换规则" class="headerlink" title="基础转换规则"></a>基础转换规则</h3><p>基本的十六进制与二进制的转换规则。十六进制的每一位可以用 4 位二进制来表示，十六进制的每一位和其对应的 4 位二进制之间有固定的对应关系</p>
+<table>
+<thead>
+<tr>
+<th>十六进制</th>
+<th>二进制</th>
+<th>十进制</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>0000</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0001</td>
+<td>1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0010</td>
+<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0011</td>
+<td>3</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0100</td>
+<td>4</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0101</td>
+<td>5</td>
+</tr>
+<tr>
+<td>6</td>
+<td>0110</td>
+<td>6</td>
+</tr>
+<tr>
+<td>7</td>
+<td>0111</td>
+<td>7</td>
+</tr>
+<tr>
+<td>8</td>
+<td>1000</td>
+<td>8</td>
+</tr>
+<tr>
+<td>9</td>
+<td>1001</td>
+<td>9</td>
+</tr>
+<tr>
+<td>A</td>
+<td>1010</td>
+<td>10</td>
+</tr>
+<tr>
+<td>B</td>
+<td>1011</td>
+<td>11</td>
+</tr>
+<tr>
+<td>C</td>
+<td>1100</td>
+<td>12</td>
+</tr>
+<tr>
+<td>D</td>
+<td>1101</td>
+<td>13</td>
+</tr>
+<tr>
+<td>E</td>
+<td>1110</td>
+<td>14</td>
+</tr>
+<tr>
+<td>F</td>
+<td>1111</td>
+<td>15</td>
+</tr>
+</tbody></table>
+<p>十六进制每一位等于4 位二进制。<br>二进制4位可以快速转换为0-15的十进制数。</p>
+<h3 id="2-分段转换法"><a href="#2-分段转换法" class="headerlink" title="2. 分段转换法"></a>2. 分段转换法</h3><p>例子： 0xFFEA</p>
+<h4 id="每一位转换为二进制："><a href="#每一位转换为二进制：" class="headerlink" title="每一位转换为二进制："></a>每一位转换为二进制：</h4><ul>
+<li>F &#x3D; 1111（二进制）</li>
+<li>F &#x3D; 1111（二进制）</li>
+<li>E &#x3D; 1110（二进制）</li>
+<li>A &#x3D; 1010（二进制）</li>
+</ul>
+<p>所以 0xFFEA &#x3D; 1111 1111 1110 1010（二进制）。</p>
+<h4 id="二进制转十进制："><a href="#二进制转十进制：" class="headerlink" title="二进制转十进制："></a>二进制转十进制：</h4><p>直接将二进制按权相加：</p>
+<p>1111 1111 1110 1010 &#x3D; (1 × 2^15) + (1 × 2^14) + ⋯ + (1 × 2^1) + (0 × 2^0)</p>
+<p>为方便，你可以利用计算器或分步进行如下计算：</p>
+<p>0xFFEA &#x3D; (15 × 16^3) + (15 × 16^2) + (14 × 16^1) + (10 × 16^0)<br>       &#x3D; (15 × 4096) + (15 × 256) + (14 × 16) + (10 × 1)<br>       &#x3D; 61440 + 3840 + 224 + 10 &#x3D; 65514（十进制）。</p>
+<h3 id="常见值的记忆"><a href="#常见值的记忆" class="headerlink" title="常见值的记忆"></a>常见值的记忆</h3><p> 记住一些常见的十六进制和二进制、十进制的对应关系，比如：<br>0xFF &#x3D; 255（十进制），1111 1111（二进制）<br>0xF &#x3D; 15（十进制），1111（二进制）<br>0xA &#x3D; 10（十进制），1010（二进制</p>
+<h3 id="关于进制的一些基础概念"><a href="#关于进制的一些基础概念" class="headerlink" title="关于进制的一些基础概念"></a>关于进制的一些基础概念</h3><p>进制是一种数学计数法，用于表示数字的基数和权值。常见的进制有二进制、八进制、十进制和十六进制等。<br>深刻理解进制的概念，有助于我们更好地理解计算机中的数据表示和转换。非常有意义</p>
+<h4 id="基数"><a href="#基数" class="headerlink" title="基数"></a>基数</h4><p>十进制是以10为基数的系统，二进制是以2为基数的系统,以此类推。为了理解它们的对应关系，我们首先来看它们的基础概念。</p>
+<h5 id="1-十进制"><a href="#1-十进制" class="headerlink" title="1. 十进制"></a>1. 十进制</h5><ul>
+<li><p><strong>十进制使用 0 到 9 共 10 个数字，每一位表示一个数位，每一位的权重是 10 的幂次：</strong></p>
+<ul>
+<li><p>例如，十进制数 137 表示：</p>
+<p>137 &#x3D; (1 × 10²) + (3 × 10¹) + (7 × 10⁰)</p>
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="2-二进制"><a href="#2-二进制" class="headerlink" title="2. 二进制"></a>2. 二进制</h5><ul>
+<li><p><strong>二进制使用 0 和 1 两个数字，每一位的权重是 2 的幂次：</strong></p>
+<ul>
+<li><p>例如，二进制数 1011 表示：</p>
+<p>1011 &#x3D; (1 × 2³) + (0 × 2²) + (1 × 2¹) + (1 × 2⁰)</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="一个简单的例子"><a href="#一个简单的例子" class="headerlink" title="一个简单的例子"></a>一个简单的例子</h2><figure class="highlight arm"><table><tr><td class="code"><pre><span class="line"><span class="symbol">.global</span> _start</span><br><span class="line"></span><br><span class="line"><span class="symbol">.text</span></span><br><span class="line"><span class="symbol">_start:</span></span><br><span class="line">    <span class="keyword">MOV</span> <span class="built_in">X0</span>, <span class="number">#1</span>         <span class="comment">// 将X0寄存器设置为1 (stdout)</span></span><br><span class="line">    <span class="keyword">LDR</span> <span class="built_in">X1</span>, <span class="symbol">=message</span>   <span class="comment">// 将消息的地址加载到X1</span></span><br><span class="line">    <span class="keyword">MOV</span> <span class="built_in">X2</span>, <span class="number">#13</span>        <span class="comment">// 设置消息的长度 (13字节)</span></span><br><span class="line">    <span class="keyword">MOV</span> <span class="built_in">X8</span>, <span class="number">#64</span>        <span class="comment">// 系统调用号 (sys_write)</span></span><br><span class="line">    <span class="keyword">SVC</span> <span class="number">0</span>              <span class="comment">// 触发系统调用</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">MOV</span> <span class="built_in">X8</span>, <span class="number">#93</span>        <span class="comment">// 系统调用号 (sys_exit)</span></span><br><span class="line">    <span class="keyword">SVC</span> <span class="number">0</span>              <span class="comment">// 触发系统调用</span></span><br><span class="line"></span><br><span class="line"><span class="symbol">.data</span></span><br><span class="line"><span class="symbol">message:</span></span><br><span class="line">    <span class="meta">.ascii</span> <span class="string">&quot;Hello, ARM!\n&quot;</span></span><br></pre></td></tr></table></figure>
+<p>这段代码的功能是输出 “Hello, ARM!” 并退出程序。下面是代码的执行过程：</p>
+<h3 id="代码解析"><a href="#代码解析" class="headerlink" title="代码解析"></a>代码解析</h3><p>.global _start<br>  @@global _start 指示链接器这个程序的入口点是 _start，即程序从这里开始执行。操作系统会寻找这个 _start 标签，作为程序执行的起点。<br>.text<br>  @@.text 表示接下来是代码段，所有的指令都将在这个段中执行。<br>_start:<br>  @@这是程序的入口，操作系统在加载程序时会跳到这个标签开始执行指令。</p>
+<h3 id="调用-sys-write-系统调用的过程："><a href="#调用-sys-write-系统调用的过程：" class="headerlink" title="调用 sys_write 系统调用的过程："></a>调用 sys_write 系统调用的过程：</h3><p>设置 X0：文件描述符（File Descriptor），1 表示标准输出（终端）。即 X0 &#x3D; 1 表示写入到终端（stdout）。<br>设置 X1：要写入的数据的地址，X1 中存放的是指向消息的内存地址。<br>设置 X2：要写入的数据的长度，X2 中存放的是数据的字节长度（例如，字符串的长度）。<br>设置 X8：X8 中存放的是系统调用号。sys_write 的调用号是 64，所以 X8 &#x3D; 64。<br>触发 SVC 0：SVC（Supervisor Call）用于触发系统调用。SVC 0 使处理器从用户态切换到内核态，执行指定的系统调用（这里是 sys_write）。<br>总结：<br>X0：文件描述符（1 表示写入到终端）。<br>X1：要写入的数据的内存地址。<br>X2：要写入的数据的长度。<br>X8：系统调用号，64 表示 sys_write。<br>SVC 0：触发系统调用，将上述寄存器的值传递给操作系统，由操作系统执行写入操作。<br>这个流程用于通过 sys_write 将数据输出到终端或其他文件描述符。</p>
+]]></content>
+      <categories>
+        <category>汇编</category>
       </categories>
   </entry>
 </search>
