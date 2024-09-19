@@ -21,19 +21,19 @@
     var CONFIG = {"hostname":"kulinan18688.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","page":true,"padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="下载镜像 我的手机是pixel3，所以我下载了对应的镜像，下载地址：https:&#x2F;&#x2F;developers.google.com&#x2F;android&#x2F;images?hl&#x3D;zh-cn#blueline">
+  <meta name="description" content="函数调用是程序执行中的核心机制之一，尤其是在现代处理器架构中，它关系到如何传递参数、保存上下文、返回结果等操作。接下来，本文深入讲解 AArch64 64位架构 下的函数调用机制，包括调用约定、栈管理、寄存器使用、以及函数调用返回机制等。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="记一次安卓root">
-<meta property="og:url" content="https://kulinan18688.github.io/2024/08/11/anroidroot/index.html">
+<meta property="og:title" content="arm汇编学习笔记4-函数调用(1)">
+<meta property="og:url" content="https://kulinan18688.github.io/2024/09/12/arm_example4/index.html">
 <meta property="og:site_name" content="老兵之家">
-<meta property="og:description" content="下载镜像 我的手机是pixel3，所以我下载了对应的镜像，下载地址：https:&#x2F;&#x2F;developers.google.com&#x2F;android&#x2F;images?hl&#x3D;zh-cn#blueline">
+<meta property="og:description" content="函数调用是程序执行中的核心机制之一，尤其是在现代处理器架构中，它关系到如何传递参数、保存上下文、返回结果等操作。接下来，本文深入讲解 AArch64 64位架构 下的函数调用机制，包括调用约定、栈管理、寄存器使用、以及函数调用返回机制等。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-08-11T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-09-06T03:59:44.592Z">
+<meta property="article:published_time" content="2024-09-12T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-09-18T07:43:20.008Z">
 <meta property="article:author" content="不死老兵">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://kulinan18688.github.io/2024/08/11/anroidroot/">
+<link rel="canonical" href="https://kulinan18688.github.io/2024/09/12/arm_example4/">
 
 
 <script id="page-configurations">
@@ -46,7 +46,7 @@
   };
 </script>
 
-  <title>记一次安卓root | 老兵之家</title>
+  <title>arm汇编学习笔记4-函数调用(1) | 老兵之家</title>
   
 
 
@@ -184,7 +184,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://kulinan18688.github.io/2024/08/11/anroidroot/">
+    <link itemprop="mainEntityOfPage" href="https://kulinan18688.github.io/2024/09/12/arm_example4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.png">
@@ -197,7 +197,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          记一次安卓root
+          arm汇编学习笔记4-函数调用(1)
         </h1>
 
         <div class="post-meta">
@@ -207,14 +207,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2024-08-12 00:00:00" itemprop="dateCreated datePublished" datetime="2024-08-12T00:00:00+08:00">2024-08-12</time>
+              <time title="创建时间：2024-09-13 00:00:00" itemprop="dateCreated datePublished" datetime="2024-09-13T00:00:00+08:00">2024-09-13</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-09-06 11:59:44" itemprop="dateModified" datetime="2024-09-06T11:59:44+08:00">2024-09-06</time>
+                <time title="修改时间：2024-09-18 15:43:20" itemprop="dateModified" datetime="2024-09-18T15:43:20+08:00">2024-09-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -222,7 +222,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%80%86%E5%90%91/" itemprop="url" rel="index"><span itemprop="name">逆向</span></a>
+                  <a href="/categories/%E6%B1%87%E7%BC%96/" itemprop="url" rel="index"><span itemprop="name">汇编</span></a>
                 </span>
             </span>
 
@@ -237,7 +237,39 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="下载镜像"><a href="#下载镜像" class="headerlink" title="下载镜像"></a>下载镜像</h2><p> 我的手机是pixel3，所以我下载了对应的镜像，下载地址：<a target="_blank" rel="noopener" href="https://developers.google.com/android/images?hl=zh-cn#blueline">https://developers.google.com/android/images?hl=zh-cn#blueline</a></p>
+        <p>函数调用是程序执行中的核心机制之一，尤其是在现代处理器架构中，它关系到如何传递参数、保存上下文、返回结果等操作。接下来，<br>本文深入讲解 AArch64 64位架构 下的函数调用机制，包括调用约定、栈管理、寄存器使用、以及函数调用返回机制等。</p>
+<span id="more"></span>
+<h2 id="AArch64-函数调用约定"><a href="#AArch64-函数调用约定" class="headerlink" title="AArch64 函数调用约定"></a>AArch64 函数调用约定</h2><p>函数调用约定（Calling Convention）是处理器和操作系统规定的一套规则，用来决定函数调用时如何在寄存器和栈之间传递参数、保存上下文、返回值等。<br>AArch64 遵循的调用约定规定了参数传递、栈布局和返回值的规则。</p>
+<h3 id="参数传递"><a href="#参数传递" class="headerlink" title="参数传递"></a>参数传递</h3><ul>
+<li>X0 - X7：用于传递函数的前 8 个参数。如果函数需要传递超过 8 个参数，超出的部分会被传递到 栈 中。</li>
+<li>X8 及更高的寄存器通常用于系统调用等特殊用途，而不会用于普通函数调用。</li>
+</ul>
+<h3 id="返回值"><a href="#返回值" class="headerlink" title="返回值"></a>返回值</h3><p>函数的 返回值 通常通过 X0 和 X1 寄存器返回</p>
+<ul>
+<li>如果返回值是一个整数或指针类型（64 位或 32 位），它将存储在 X0 中。</li>
+<li>如果函数返回两个值，X0 和 X1 会分别存储第一个和第二个返回值。</li>
+<li>对于较大的返回值（如结构体），这些值可能通过栈传递。</li>
+</ul>
+<h3 id="保存调用者寄存器和被调用者寄存器"><a href="#保存调用者寄存器和被调用者寄存器" class="headerlink" title="保存调用者寄存器和被调用者寄存器"></a>保存调用者寄存器和被调用者寄存器</h3><ul>
+<li>调用者保存寄存器（Caller-Saved Registers）：调用者在调用函数之前，负责保存它们的值，因为函数调用可能会覆盖这些寄存器的值。包括：X0-X15。</li>
+<li>被调用者保存寄存器（Callee-Saved Registers）：被调用者必须在函数结束前恢复它们的值，包括：X19-X29。这些寄存器在函数调用期间不会被修改，<br>这相当于是一个规则的约定，因为在函数调用中，寄存器的值会被覆盖，如果要恢复就需要保存. X0-X15是调用者需要负责保存的寄存器，X19-X29是被调用者需要负责保存的寄存器。<br>除非函数主动保存和恢复它们的值。</li>
+</ul>
+<h2 id="函数调用过程详解"><a href="#函数调用过程详解" class="headerlink" title="函数调用过程详解"></a>函数调用过程详解</h2><h3 id="栈的使用"><a href="#栈的使用" class="headerlink" title="栈的使用"></a>栈的使用</h3><p>  栈是函数调用中保存数据的核心工具。AArch64 中的栈是向下生长的，也就是说，栈指针（SP）的值会随着数据的压栈而减小。</p>
+<ul>
+<li>栈指针（SP）：指向当前栈的顶部。每次调用函数时，栈指针会移动以腾出空间存储局部变量、溢出的参数和保存寄存器。</li>
+<li>保存当前栈帧的基地址，便于追踪局部变量和恢复栈帧。每个函数调用时，新的栈帧会被创建，并将前一个栈帧的地址存入栈中，以便函数调用结束后恢复调用者的上下文。</li>
+</ul>
+<h3 id="函数调用的步骤"><a href="#函数调用的步骤" class="headerlink" title="函数调用的步骤"></a>函数调用的步骤</h3><h4 id="保存上下文"><a href="#保存上下文" class="headerlink" title="保存上下文"></a>保存上下文</h4><ul>
+<li>调用者保存寄存器（Caller-Saved Registers）：调用者在调用函数之前，负责保存它们的值，因为函数调用可能会覆盖这些寄存器的值。包括：X0-X15。</li>
+<li>保存返回地址：将返回地址存入栈中，以便函数调用结束后恢复调用者的上下文。</li>
+<li>保存栈帧指针：保存当前栈帧的基地址，便于追踪局部变量和恢复栈帧。</li>
+</ul>
+<h4 id="传递参数"><a href="#传递参数" class="headerlink" title="传递参数"></a>传递参数</h4><ul>
+<li>将函数参数传递到 X0 - X7 寄存器中，如果参数超过 8 个，剩余的参数会被传递到栈中。</li>
+</ul>
+<h4 id="调用函数"><a href="#调用函数" class="headerlink" title="调用函数"></a>调用函数</h4><p>使用 BL（Branch with Link）指令跳转到被调用函数，X30（Link Register）会保存返回地址。函数调用完成后，程序会通过 X30 返回调用者。</p>
+<h4 id="执行函数体"><a href="#执行函数体" class="headerlink" title="执行函数体"></a>执行函数体</h4><p>被调用的函数会根据需要使用 X0-X7 中的参数，执行逻辑。<br>如果需要使用保存寄存器（X19-X29），函数需要先将这些寄存器的值保存到栈上。</p>
+<h4 id="返回结果"><a href="#返回结果" class="headerlink" title="返回结果"></a>返回结果</h4><p>如果函数有返回值，它会将结果放入 X0 中返回。对于较复杂的返回值（如结构体），则可能会通过栈返回。</p>
 
     </div>
 
@@ -252,10 +284,13 @@
 
         
     <div class="post-nav">
-      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2024/08/11/frida%E5%AE%89%E8%A3%85/" rel="next" title="frida安装">
-      frida安装 <i class="fa fa-chevron-right"></i>
+    <a href="/2024/09/11/arm_example2/" rel="prev" title="arm汇编学习笔记2-系统调用">
+      <i class="fa fa-chevron-left"></i> arm汇编学习笔记2-系统调用
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2024/09/12/arm_example3/" rel="next" title="arm汇编学习笔记3-寄存器">
+      arm汇编学习笔记3-寄存器 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -315,7 +350,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E9%95%9C%E5%83%8F"><span class="nav-number">1.</span> <span class="nav-text">下载镜像</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#AArch64-%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A"><span class="nav-number">1.</span> <span class="nav-text">AArch64 函数调用约定</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92"><span class="nav-number">1.1.</span> <span class="nav-text">参数传递</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%94%E5%9B%9E%E5%80%BC"><span class="nav-number">1.2.</span> <span class="nav-text">返回值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%9D%E5%AD%98%E8%B0%83%E7%94%A8%E8%80%85%E5%AF%84%E5%AD%98%E5%99%A8%E5%92%8C%E8%A2%AB%E8%B0%83%E7%94%A8%E8%80%85%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">1.3.</span> <span class="nav-text">保存调用者寄存器和被调用者寄存器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3"><span class="nav-number">2.</span> <span class="nav-text">函数调用过程详解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%88%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-number">2.1.</span> <span class="nav-text">栈的使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E7%9A%84%E6%AD%A5%E9%AA%A4"><span class="nav-number">2.2.</span> <span class="nav-text">函数调用的步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%9D%E5%AD%98%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="nav-number">2.2.1.</span> <span class="nav-text">保存上下文</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%A0%E9%80%92%E5%8F%82%E6%95%B0"><span class="nav-number">2.2.2.</span> <span class="nav-text">传递参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B0%83%E7%94%A8%E5%87%BD%E6%95%B0"><span class="nav-number">2.2.3.</span> <span class="nav-text">调用函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E5%87%BD%E6%95%B0%E4%BD%93"><span class="nav-number">2.2.4.</span> <span class="nav-text">执行函数体</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%94%E5%9B%9E%E7%BB%93%E6%9E%9C"><span class="nav-number">2.2.5.</span> <span class="nav-text">返回结果</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 

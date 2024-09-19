@@ -171,7 +171,7 @@
       </categories>
   </entry>
   <entry>
-    <title>arm汇编学习笔记0</title>
+    <title>arm汇编学习笔记0-环境搭建</title>
     <url>/2024/09/06/arm_example0/</url>
     <content><![CDATA[<p>最新在学习arm汇编，经过全网搜索，决定以ARM Assembly By Example 这本书为主线进行学习，这里记录一下学习笔记。</p>
 <span id="more"></span>
@@ -261,7 +261,7 @@
       </categories>
   </entry>
   <entry>
-    <title>arm汇编学习笔记1</title>
+    <title>arm汇编学习笔记1-寄存器和指令</title>
     <url>/2024/09/09/arm_example1/</url>
     <content><![CDATA[<p>本系列文章以64位arm架构(aarch64)为主线,会穿插些32位arm架构的内容和对比。</p>
 <span id="more"></span>
@@ -426,6 +426,318 @@
 <p>这段代码的功能是输出 “Hello, ARM!” 并退出程序。下面是代码的执行过程：</p>
 <h3 id="代码解析"><a href="#代码解析" class="headerlink" title="代码解析"></a>代码解析</h3><p>.global _start<br>  @@global _start 指示链接器这个程序的入口点是 _start，即程序从这里开始执行。操作系统会寻找这个 _start 标签，作为程序执行的起点。<br>.text<br>  @@.text 表示接下来是代码段，所有的指令都将在这个段中执行。<br>_start:<br>  @@这是程序的入口，操作系统在加载程序时会跳到这个标签开始执行指令。</p>
 <h3 id="调用-sys-write-系统调用的过程："><a href="#调用-sys-write-系统调用的过程：" class="headerlink" title="调用 sys_write 系统调用的过程："></a>调用 sys_write 系统调用的过程：</h3><p>设置 X0：文件描述符（File Descriptor），1 表示标准输出（终端）。即 X0 &#x3D; 1 表示写入到终端（stdout）。<br>设置 X1：要写入的数据的地址，X1 中存放的是指向消息的内存地址。<br>设置 X2：要写入的数据的长度，X2 中存放的是数据的字节长度（例如，字符串的长度）。<br>设置 X8：X8 中存放的是系统调用号。sys_write 的调用号是 64，所以 X8 &#x3D; 64。<br>触发 SVC 0：SVC（Supervisor Call）用于触发系统调用。SVC 0 使处理器从用户态切换到内核态，执行指定的系统调用（这里是 sys_write）。<br>总结：<br>X0：文件描述符（1 表示写入到终端）。<br>X1：要写入的数据的内存地址。<br>X2：要写入的数据的长度。<br>X8：系统调用号，64 表示 sys_write。<br>SVC 0：触发系统调用，将上述寄存器的值传递给操作系统，由操作系统执行写入操作。<br>这个流程用于通过 sys_write 将数据输出到终端或其他文件描述符。</p>
+]]></content>
+      <categories>
+        <category>汇编</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>arm汇编学习笔记3-寄存器</title>
+    <url>/2024/09/12/arm_example3/</url>
+    <content><![CDATA[<h2 id="通用寄存器"><a href="#通用寄存器" class="headerlink" title="通用寄存器"></a>通用寄存器</h2><p>AArch64 提供了 31 个 64 位的通用寄存器，编号从 X0 到 X30。这些寄存器可以用于存储数据、传递函数参数等。<br>每个 64 位寄存器都可以被当作 32 位寄存器使用，此时使用的前缀是 W（比如 X0 的低 32 位可以通过 W0 访问）。</p>
+<span id="more"></span>
+<ul>
+<li>X0 - X7：用于系统调用和函数调用时的参数传递和返回值存储。</li>
+<li>X8：通常用于存储系统调用号。</li>
+<li>X9 - X15：用于临时存储数据。</li>
+<li>X16 - X17：<strong>Intra-Procedure Call（IPC）</strong>寄存器，通常用于在函数调用中作为临时值存储或帮助跳转</li>
+<li>X18：<strong>Platform Register</strong>，用于存储平台相关的信息。</li>
+<li>X19 - X28：保存寄存器（callee-saved），这些寄存器在函数调用之间的值需要被保存。</li>
+<li>X29：<strong>Frame Pointer</strong>，用于指向当前函数的栈帧。</li>
+<li>X30：<strong>Link Register</strong>，用于存储返回地址。</li>
+</ul>
+<h3 id="64-位寄存器（X-和-W）："><a href="#64-位寄存器（X-和-W）：" class="headerlink" title="64 位寄存器（X 和 W）："></a>64 位寄存器（X 和 W）：</h3><ul>
+<li>X0-X30：每个寄存器为 64 位（8 字节），可用于处理 64 位数据。</li>
+<li>W0-W30：每个寄存器为 32 位（4 字节），可用于处理 32 位数据。</li>
+</ul>
+<h3 id="特殊寄存器："><a href="#特殊寄存器：" class="headerlink" title="特殊寄存器："></a>特殊寄存器：</h3><ul>
+<li>SP（X31）：栈指针，用于指向当前栈顶。栈指针在 64 位架构中也是一个非常重要的寄存器，指向栈顶。每次函数调用时，栈指针会调整以便为局部变量分配空间。</li>
+<li>PC：程序计数器，用于存储当前指令的地址。</li>
+<li>X29：帧指针，用于指向当前函数的栈帧。帧指针存储当前栈帧的基地址，帮助在函数调用中追踪局部变量和保存调用上下文。</li>
+<li>XZR &#x2F; WZR（Zero Register）：这是一个特殊的寄存器，它始终为零。当你将数据写入 XZR 时，数据会被丢弃；当你从 XZR 读取数据时，它始终返回零。</li>
+</ul>
+<h3 id="程序状态寄存器（Current-Program-Status-Register-CPSR）"><a href="#程序状态寄存器（Current-Program-Status-Register-CPSR）" class="headerlink" title="程序状态寄存器（Current Program Status Register, CPSR）"></a>程序状态寄存器（Current Program Status Register, CPSR）</h3><p>CPSR 在 64 位架构下称为 PSTATE，它用于存储程序执行时的重要状态信息，比如条件标志、处理器模式、异常状态等。最重要的几个位是条件标志位，这些标志可以帮助处理条件执行的指令。</p>
+<ul>
+<li>N（Negative）标志位：表示结果是负数。</li>
+<li>Z（Zero）标志位：表示结果为零。</li>
+<li>C（Carry）标志位：表示无符号数运算时的进位。</li>
+<li>V（Overflow）标志位：表示有符号数运算时的溢出。<br>这些条件标志位常用于条件执行指令，例如 CBZ（compare and branch if zero） 和 CBNZ（compare and branch if not zero）。</li>
+</ul>
+<h3 id="位系统调用的寄存器使用"><a href="#位系统调用的寄存器使用" class="headerlink" title="位系统调用的寄存器使用"></a>位系统调用的寄存器使用</h3><p>在 AArch64 中，系统调用的参数和调用号通过以下寄存器传递：</p>
+<p>X0-X7：传递系统调用的参数。<br>X8：传递系统调用号。<br>svc 0：执行系统调用。</p>
+]]></content>
+      <categories>
+        <category>汇编</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>arm汇编学习笔记2-系统调用</title>
+    <url>/2024/09/11/arm_example2/</url>
+    <content><![CDATA[<p>和其他高级语言一样，汇编语言也需要与操作系统进行交互，这就需要使用系统调用。系统调用是操作系统提供给用户程序的接口.</p>
+<span id="more"></span>
+<h2 id="程序退出"><a href="#程序退出" class="headerlink" title="程序退出"></a>程序退出</h2><p>与许多高级语言不同，汇编程序在你停止编写代码后并不会优雅地退出。如果你不明确退出程序，计算机会继续在内存中读取指令，<br>直到读到最后一个操作码为止。因为你是在 *nix 环境中运行，当它读取到你无权访问的内存时，<br>你会遇到段错误（segmentation fault）。如果这是一个嵌入式解决方案（没有操作系统），这就是典型的未定义行为。<br>下面是一个AArch64 版本的程序退出的例子：</p>
+<figure class="highlight arm"><table><tr><td class="code"><pre><span class="line"><span class="keyword">mov</span> <span class="built_in">x0</span>, <span class="number">#0</span>   <span class="comment">@ 参数 1，0 表示正常退出</span></span><br><span class="line"><span class="keyword">mov</span> <span class="built_in">x8</span>, <span class="number">#93</span>  <span class="comment">@ 系统调用号 93 (sys_exit)</span></span><br><span class="line"><span class="keyword">svc</span> <span class="number">0</span>        <span class="comment">@ 触发系统调用</span></span><br></pre></td></tr></table></figure>
+<p>1 mov X8, #93</p>
+<ul>
+<li>在 AArch64 中，系统调用号存放在寄存器 X8 中。</li>
+<li>93 是 sys_exit 系统调用的编号。这个编号告诉操作系统我们希望执行退出操作。</li>
+<li>在 ARM64 架构下，系统调用号是通过 X8 传递给内核的<br>2 mov X0, #0</li>
+<li>系统调用的第一个参数通常放在寄存器 X0 中。对于 sys_exit 调用，X0 中存储的是退出状态码。</li>
+<li>0 表示正常退出，非 0 值表示异常退出。<br>3 svc 0</li>
+<li>svc 指令是触发系统调用的指令。在 AArch64 中，svc 0 是触发系统调用的标准方式。</li>
+<li>系统会读取 X0 中的退出码并终止程序系统会读取 X0 中的退出码并终止程序</li>
+</ul>
+<h2 id="系统调用表"><a href="#系统调用表" class="headerlink" title="系统调用表"></a>系统调用表</h2><p>上面讲了退出程序，使用了93号系统调用。那么其他系统调用呢？这就需要查看系统调用表了。系统调用表是一个由操作系统提供的表<br>，其中包含了所有系统调用的编号和对应的功能。在 Linux 中，你可以在 &#x2F;usr&#x2F;include&#x2F;asm&#x2F;unistd.h 文件中找到这个表。<br>这个文件包含了所有系统调用的编号，以及它们的功能。你可以在这个文件中找到 sys_exit 的编号是 93。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">grep -w <span class="string">&quot;sys_exit&quot;</span> /usr/include/asm/unistd.h</span><br></pre></td></tr></table></figure>
+<p>以下列出常用的系统调用：</p>
+<h3 id="常用系统调用表-AArch64"><a href="#常用系统调用表-AArch64" class="headerlink" title="常用系统调用表 (AArch64)"></a>常用系统调用表 (AArch64)</h3><table>
+<thead>
+<tr>
+<th>系统调用</th>
+<th>系统调用号</th>
+<th>描述</th>
+<th>参数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>sys_read</code></td>
+<td>63</td>
+<td>从文件描述符中读取数据</td>
+<td>X0 &#x3D; 文件描述符，X1 &#x3D; 缓冲区指针，X2 &#x3D; 读取字节数</td>
+</tr>
+<tr>
+<td><code>sys_write</code></td>
+<td>64</td>
+<td>向文件描述符中写入数据</td>
+<td>X0 &#x3D; 文件描述符，X1 &#x3D; 缓冲区指针，X2 &#x3D; 写入字节数</td>
+</tr>
+<tr>
+<td><code>sys_openat</code></td>
+<td>56</td>
+<td>打开文件</td>
+<td>X0 &#x3D; AT_FDCWD，X1 &#x3D; 文件名，X2 &#x3D; 标志，X3 &#x3D; 模式（可选）</td>
+</tr>
+<tr>
+<td><code>sys_close</code></td>
+<td>57</td>
+<td>关闭文件描述符</td>
+<td>X0 &#x3D; 文件描述符</td>
+</tr>
+<tr>
+<td><code>sys_exit</code></td>
+<td>93</td>
+<td>退出程序</td>
+<td>X0 &#x3D; 退出状态码</td>
+</tr>
+<tr>
+<td><code>sys_exit_group</code></td>
+<td>94</td>
+<td>退出进程组</td>
+<td>X0 &#x3D; 退出状态码</td>
+</tr>
+<tr>
+<td><code>sys_fork</code></td>
+<td>220</td>
+<td>创建子进程</td>
+<td>无参数</td>
+</tr>
+<tr>
+<td><code>sys_execve</code></td>
+<td>221</td>
+<td>执行程序</td>
+<td>X0 &#x3D; 文件名，X1 &#x3D; 参数指针数组，X2 &#x3D; 环境变量指针数组</td>
+</tr>
+<tr>
+<td><code>sys_getpid</code></td>
+<td>172</td>
+<td>获取当前进程的 PID</td>
+<td>无参数</td>
+</tr>
+<tr>
+<td><code>sys_kill</code></td>
+<td>129</td>
+<td>发送信号给进程</td>
+<td>X0 &#x3D; PID，X1 &#x3D; 信号编号</td>
+</tr>
+<tr>
+<td><code>sys_mmap</code></td>
+<td>222</td>
+<td>映射内存</td>
+<td>X0 &#x3D; 地址，X1 &#x3D; 大小，X2 &#x3D; 保护标志，X3 &#x3D; 映射标志，X4 &#x3D; 文件描述符，X5 &#x3D; 偏移量</td>
+</tr>
+<tr>
+<td><code>sys_munmap</code></td>
+<td>215</td>
+<td>解除内存映射</td>
+<td>X0 &#x3D; 地址，X1 &#x3D; 大小</td>
+</tr>
+<tr>
+<td><code>sys_brk</code></td>
+<td>214</td>
+<td>改变数据段终止位置</td>
+<td>X0 &#x3D; 数据段终止位置</td>
+</tr>
+<tr>
+<td><code>sys_nanosleep</code></td>
+<td>101</td>
+<td>休眠一段时间</td>
+<td>X0 &#x3D; 睡眠时间指针，X1 &#x3D; 剩余时间指针</td>
+</tr>
+<tr>
+<td><code>sys_gettimeofday</code></td>
+<td>169</td>
+<td>获取当前时间</td>
+<td>X0 &#x3D; struct timeval 指针，X1 &#x3D; struct timezone 指针</td>
+</tr>
+<tr>
+<td><code>sys_time</code></td>
+<td>201</td>
+<td>获取时间（以秒为单位）</td>
+<td>X0 &#x3D; 时间指针</td>
+</tr>
+<tr>
+<td><code>sys_unlinkat</code></td>
+<td>35</td>
+<td>删除文件</td>
+<td>X0 &#x3D; 文件描述符，X1 &#x3D; 文件路径，X2 &#x3D; 标志</td>
+</tr>
+<tr>
+<td><code>sys_mkdirat</code></td>
+<td>34</td>
+<td>创建目录</td>
+<td>X0 &#x3D; 文件描述符，X1 &#x3D; 目录路径，X2 &#x3D; 权限</td>
+</tr>
+<tr>
+<td><code>sys_chdir</code></td>
+<td>49</td>
+<td>改变当前工作目录</td>
+<td>X0 &#x3D; 目录路径指针</td>
+</tr>
+<tr>
+<td><code>sys_getcwd</code></td>
+<td>17</td>
+<td>获取当前工作目录</td>
+<td>X0 &#x3D; 缓冲区指针，X1 &#x3D; 缓冲区大小</td>
+</tr>
+<tr>
+<td><code>sys_dup</code></td>
+<td>23</td>
+<td>复制文件描述符</td>
+<td>X0 &#x3D; 文件描述符</td>
+</tr>
+<tr>
+<td><code>sys_dup2</code></td>
+<td>24</td>
+<td>复制文件描述符到指定的文件描述符</td>
+<td>X0 &#x3D; 原文件描述符，X1 &#x3D; 新文件描述符</td>
+</tr>
+<tr>
+<td><code>sys_fstat</code></td>
+<td>80</td>
+<td>获取文件状态</td>
+<td>X0 &#x3D; 文件描述符，X1 &#x3D; struct stat 指针</td>
+</tr>
+<tr>
+<td><code>sys_lseek</code></td>
+<td>62</td>
+<td>设置文件偏移量</td>
+<td>X0 &#x3D; 文件描述符，X1 &#x3D; 偏移量，X2 &#x3D; 偏移方式</td>
+</tr>
+</tbody></table>
+<h3 id="sys-write-调用例子"><a href="#sys-write-调用例子" class="headerlink" title="sys_write 调用例子"></a>sys_write 调用例子</h3><p>下面是一个简单的例子，展示了如何使用 sys_write 系统调用向标准输出写入数据：</p>
+<figure class="highlight arm"><table><tr><td class="code"><pre><span class="line"><span class="symbol">.global</span> _start</span><br><span class="line"></span><br><span class="line"><span class="symbol">_start:</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">X0</span>, <span class="number">#1</span>          <span class="comment">// 文件描述符 1 (标准输出)</span></span><br><span class="line">    <span class="keyword">ldr</span> <span class="built_in">X1</span>, <span class="symbol">=message</span>    <span class="comment">// 将消息的地址加载到 X1</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">X2</span>, <span class="number">#13</span>         <span class="comment">// 消息的长度为 13 字节</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">X8</span>, <span class="number">#64</span>         <span class="comment">// 系统调用号 64 (sys_write)</span></span><br><span class="line">    <span class="keyword">svc</span> <span class="number">0</span>               <span class="comment">// 触发系统调用</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">X0</span>, <span class="number">#0</span>          <span class="comment">// 设置退出码为 0 (正常退出)</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">X8</span>, <span class="number">#93</span>         <span class="comment">// 系统调用号 93 (sys_exit)</span></span><br><span class="line">    <span class="keyword">svc</span> <span class="number">0</span>               <span class="comment">// 触发系统调用</span></span><br><span class="line"></span><br><span class="line"><span class="symbol">.data</span></span><br><span class="line"><span class="symbol">message:</span></span><br><span class="line">    <span class="meta">.ascii</span> <span class="string">&quot;Hello, ARM!\n&quot;</span></span><br></pre></td></tr></table></figure>
+<h3 id="使用-sys-gettimeofday-获取当前时间（精确到微秒）："><a href="#使用-sys-gettimeofday-获取当前时间（精确到微秒）：" class="headerlink" title="使用 sys_gettimeofday 获取当前时间（精确到微秒）："></a>使用 sys_gettimeofday 获取当前时间（精确到微秒）：</h3><figure class="highlight arm"><table><tr><td class="code"><pre><span class="line"><span class="symbol">.global</span> _start</span><br><span class="line"></span><br><span class="line"><span class="symbol">_start:</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">X0</span>, <span class="symbol">#timeval</span>       <span class="comment">// 指向 struct timeval 的指针</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">X1</span>, <span class="number">#0</span>             <span class="comment">// 不关心时区信息</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">X8</span>, <span class="number">#169</span>           <span class="comment">// 系统调用号 169 (sys_gettimeofday)</span></span><br><span class="line">    <span class="keyword">svc</span> <span class="number">0</span>                  <span class="comment">// 触发系统调用</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">X0</span>, <span class="number">#0</span>             <span class="comment">// 正常退出</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">X8</span>, <span class="number">#93</span>            <span class="comment">// 系统调用号 93 (sys_exit)</span></span><br><span class="line">    <span class="keyword">svc</span> <span class="number">0</span>                  <span class="comment">// 触发系统调用</span></span><br><span class="line"></span><br><span class="line"><span class="symbol">.data</span></span><br><span class="line"><span class="symbol">timeval:</span></span><br><span class="line">    <span class="meta">.space</span> <span class="number">16</span>              <span class="comment">// 用于存储时间的 struct timeval</span></span><br><span class="line"><span class="symbol">.global</span> _start</span><br><span class="line"></span><br><span class="line"><span class="symbol">_start:</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">X0</span>, <span class="symbol">#timeval</span>       <span class="comment">// 指向 struct timeval 的指针</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">X1</span>, <span class="number">#0</span>             <span class="comment">// 不关心时区信息</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">X8</span>, <span class="number">#169</span>           <span class="comment">// 系统调用号 169 (sys_gettimeofday)</span></span><br><span class="line">    <span class="keyword">svc</span> <span class="number">0</span>                  <span class="comment">// 触发系统调用</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">X0</span>, <span class="number">#0</span>             <span class="comment">// 正常退出</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">X8</span>, <span class="number">#93</span>            <span class="comment">// 系统调用号 93 (sys_exit)</span></span><br><span class="line">    <span class="keyword">svc</span> <span class="number">0</span>                  <span class="comment">// 触发系统调用</span></span><br><span class="line"></span><br><span class="line"><span class="symbol">.data</span></span><br><span class="line"><span class="symbol">timeval:</span></span><br><span class="line">    <span class="meta">.space</span> <span class="number">16</span>              <span class="comment">// 用于存储时间的 struct timeval</span></span><br></pre></td></tr></table></figure>
+<h3 id="使用-sys-time-获取当前时间戳（精确到秒）："><a href="#使用-sys-time-获取当前时间戳（精确到秒）：" class="headerlink" title="使用 sys_time 获取当前时间戳（精确到秒）："></a>使用 sys_time 获取当前时间戳（精确到秒）：</h3><figure class="highlight arm"><table><tr><td class="code"><pre><span class="line"><span class="symbol">.global</span> _start</span><br><span class="line"></span><br><span class="line"><span class="symbol">_start:</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">X0</span>, <span class="number">#0</span>             <span class="comment">// 直接返回时间戳</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">X8</span>, <span class="number">#201</span>           <span class="comment">// 系统调用号 201 (sys_time)</span></span><br><span class="line">    <span class="keyword">svc</span> <span class="number">0</span>                  <span class="comment">// 触发系统调用</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">X0</span>, <span class="number">#0</span>             <span class="comment">// 正常退出</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">X8</span>, <span class="number">#93</span>            <span class="comment">// 系统调用号 93 (sys_exit)</span></span><br><span class="line">    <span class="keyword">svc</span> <span class="number">0</span>                  <span class="comment">// 触发系统调用</span></span><br></pre></td></tr></table></figure>
+<h3 id="写入文件"><a href="#写入文件" class="headerlink" title="写入文件"></a>写入文件</h3><p>下面是一个在当前目录下创建一个名为 abc.txt 的文件，并向其中写入 “Hello, World!” 的 AArch64 汇编示例。</p>
+<ul>
+<li>sys_openat (系统调用号 56)：用于打开或创建文件。</li>
+<li>sys_write (系统调用号 64)：用于向文件写入数据。</li>
+<li>sys_close (系统调用号 57)：用于关闭文件。<figure class="highlight arm"><table><tr><td class="code"><pre><span class="line"><span class="symbol">.section</span> <span class="meta">.data</span></span><br><span class="line"><span class="symbol">filename:</span></span><br><span class="line">    <span class="meta">.ascii</span> <span class="string">&quot;abc.txt\n&quot;</span>             <span class="comment">// 要创建的文件名</span></span><br><span class="line"><span class="symbol">message:</span></span><br><span class="line">    <span class="meta">.ascii</span> <span class="string">&quot;Hello, World!\n&quot;</span>       <span class="comment">// 要写入文件的内容</span></span><br><span class="line"></span><br><span class="line"><span class="symbol">.section</span> <span class="meta">.text</span></span><br><span class="line"><span class="symbol">.global</span> _start</span><br><span class="line"></span><br><span class="line"><span class="symbol">_start:</span></span><br><span class="line">    <span class="comment">// 打开或创建 abc.txt 文件</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">X0</span>, #-<span class="number">100</span>                  <span class="comment">// dirfd = AT_FDCWD (-100)，表示当前工作目录</span></span><br><span class="line">    <span class="keyword">ldr</span> <span class="built_in">X1</span>, <span class="symbol">=filename</span>              <span class="comment">// pathname = &quot;abc.txt&quot;</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">X2</span>, <span class="number">#0101</span>                  <span class="comment">// flags = O_WRONLY | O_CREAT (0x101)</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">X3</span>, <span class="number">#0644</span>                  <span class="comment">// mode = 0644 (八进制权限)</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">X8</span>, <span class="number">#56</span>                    <span class="comment">// 系统调用号 56 (sys_openat)</span></span><br><span class="line">    <span class="keyword">svc</span> <span class="number">0</span>                          <span class="comment">// 触发系统调用</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 保存文件描述符</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">X9</span>, <span class="built_in">X0</span>                     <span class="comment">// 把返回的文件描述符存到 X9 中</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 向文件写入 &quot;Hello, World!&quot;</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">X0</span>, <span class="built_in">X9</span>                     <span class="comment">// 文件描述符</span></span><br><span class="line">    <span class="keyword">ldr</span> <span class="built_in">X1</span>, <span class="symbol">=message</span>               <span class="comment">// 要写入的数据的地址</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">X2</span>, <span class="number">#14</span>                    <span class="comment">// 要写入的数据长度 (14 字节)</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">X8</span>, <span class="number">#64</span>                    <span class="comment">// 系统调用号 64 (sys_write)</span></span><br><span class="line">    <span class="keyword">svc</span> <span class="number">0</span>                          <span class="comment">// 触发系统调用</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 关闭文件</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">X0</span>, <span class="built_in">X9</span>                     <span class="comment">// 文件描述符</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">X8</span>, <span class="number">#57</span>                    <span class="comment">// 系统调用号 57 (sys_close)</span></span><br><span class="line">    <span class="keyword">svc</span> <span class="number">0</span>                          <span class="comment">// 触发系统调用</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 退出程序</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">X0</span>, <span class="number">#0</span>                     <span class="comment">// 退出码为 0 (正常退出)</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">X8</span>, <span class="number">#93</span>                    <span class="comment">// 系统调用号 93 (sys_exit)</span></span><br><span class="line">    <span class="keyword">svc</span> <span class="number">0</span>                          <span class="comment">// 触发系统调用</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+]]></content>
+      <categories>
+        <category>汇编</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>arm汇编学习笔记4-函数调用(2)</title>
+    <url>/2024/09/17/arm_example5/</url>
+    <content><![CDATA[<p>上一篇简单的介绍了函数调用的基本概念，本文将继续深入讲解 AArch64 64位架构 下的函数调用机制，包括调用约定、栈管理、寄存器使用、以及函数调用返回机制等。<br>此篇文章以aar64架构为例，介绍函数调用的栈帧结构、栈帧指针（fp）和栈指针（sp）的角色，以及栈帧的创建和销毁过程。</p>
+<span id="more"></span>
+<h2 id="栈帧（Stack-Frame）的定义"><a href="#栈帧（Stack-Frame）的定义" class="headerlink" title="栈帧（Stack Frame）的定义"></a>栈帧（Stack Frame）的定义</h2><p>栈帧 是每个函数调用在栈上分配的一块独立内存区域，用于存储函数的局部变量、参数、返回地址以及保存的寄存器等信息。<br>通过栈帧，函数能够独立地执行，而不会干扰其他函数的执行状态。</p>
+<h3 id="帧指针（fp）和栈指针（sp）的角色"><a href="#帧指针（fp）和栈指针（sp）的角色" class="headerlink" title="帧指针（fp）和栈指针（sp）的角色"></a>帧指针（fp）和栈指针（sp）的角色</h3><p>在 AArch64 架构中，帧指针（fp 或 x29） 和 栈指针（sp） 一起构成了函数内部的 栈帧（Stack Frame）</p>
+<ul>
+<li>帧指针（Frame Pointer，fp）：指向当前栈帧的基地址，用于访问局部变量和恢复栈帧。在aa64架构中，帧指针通常用 x29 寄存器表示。<ul>
+<li>作用：<ul>
+<li>提供一个稳定的基址，用于访问栈帧中的参数和局部变量</li>
+<li>维护调用链，通过保存前一个栈帧的 fp，形成帧指针链（Frame Pointer Chain），便于栈回溯和调试</li>
+</ul>
+</li>
+<li>特性 <ul>
+<li>在函数调用过程中，fp 的值不会改变，除非函数调用结束后，恢复前一个栈帧的 fp</li>
+<li>fp 通常指向栈帧的底部，即栈帧的最高地址,sp指向栈帧的顶部，即栈帧的最低地址</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>栈指针（Stack Pointer，sp）：指向当前栈的顶部，用于分配和释放栈空间。在aa64架构中，栈指针通常用 x31 寄存器表示。<ul>
+<li>作用： <ul>
+<li>指向当前栈顶（低地址），用于动态分配和释放栈空间。</li>
+<li>管理函数内部的局部变量和临时数据。</li>
+<li>在aar64架构中，地址向下增长，栈指针（sp）的值会随着数据的压栈而减小</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="帧指针和栈指针如何构成栈帧"><a href="#帧指针和栈指针如何构成栈帧" class="headerlink" title="帧指针和栈指针如何构成栈帧"></a>帧指针和栈指针如何构成栈帧</h2><h3 id="栈的增长方向"><a href="#栈的增长方向" class="headerlink" title="栈的增长方向"></a>栈的增长方向</h3><pre><code>在 AArch64 架构中，栈是向低地址方向增长的。也就是说：
+- 向栈中压入数据时，sp 减小
+- 释放栈空间时，sp 增加。
+</code></pre>
+<h3 id="栈帧的布局"><a href="#栈帧的布局" class="headerlink" title="栈帧的布局"></a>栈帧的布局</h3><pre><code>一个典型的栈帧布局如下
+<figure class="highlight arm"><table><tr><td class="code"><pre><span class="line">    高地址</span><br><span class="line">+-----------------------------+ &lt;- <span class="built_in">fp</span> (<span class="built_in">x29</span>)</span><br><span class="line"><span class="title">|      保存的旧 fp (x29)       |</span></span><br><span class="line">+-----------------------------+</span><br><span class="line"><span class="title">|       保存的 lr (x30)        |</span></span><br><span class="line">+-----------------------------+</span><br><span class="line"><span class="title">|       函数参数（如果在栈上）  |</span></span><br><span class="line">+-----------------------------+</span><br><span class="line"><span class="title">|        局部变量              |</span></span><br><span class="line">+-----------------------------+</span><br><span class="line"><span class="title">|        临时数据              |</span></span><br><span class="line">+-----------------------------+</span><br><span class="line"><span class="title">|                             |</span> &lt;- <span class="built_in">sp</span></span><br><span class="line">+-----------------------------+ &lt;- 低地址</span><br></pre></td></tr></table></figure>
+</code></pre>
+]]></content>
+      <categories>
+        <category>汇编</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>arm汇编学习笔记4-函数调用(1)</title>
+    <url>/2024/09/12/arm_example4/</url>
+    <content><![CDATA[<p>函数调用是程序执行中的核心机制之一，尤其是在现代处理器架构中，它关系到如何传递参数、保存上下文、返回结果等操作。接下来，<br>本文深入讲解 AArch64 64位架构 下的函数调用机制，包括调用约定、栈管理、寄存器使用、以及函数调用返回机制等。</p>
+<span id="more"></span>
+<h2 id="AArch64-函数调用约定"><a href="#AArch64-函数调用约定" class="headerlink" title="AArch64 函数调用约定"></a>AArch64 函数调用约定</h2><p>函数调用约定（Calling Convention）是处理器和操作系统规定的一套规则，用来决定函数调用时如何在寄存器和栈之间传递参数、保存上下文、返回值等。<br>AArch64 遵循的调用约定规定了参数传递、栈布局和返回值的规则。</p>
+<h3 id="参数传递"><a href="#参数传递" class="headerlink" title="参数传递"></a>参数传递</h3><ul>
+<li>X0 - X7：用于传递函数的前 8 个参数。如果函数需要传递超过 8 个参数，超出的部分会被传递到 栈 中。</li>
+<li>X8 及更高的寄存器通常用于系统调用等特殊用途，而不会用于普通函数调用。</li>
+</ul>
+<h3 id="返回值"><a href="#返回值" class="headerlink" title="返回值"></a>返回值</h3><p>函数的 返回值 通常通过 X0 和 X1 寄存器返回</p>
+<ul>
+<li>如果返回值是一个整数或指针类型（64 位或 32 位），它将存储在 X0 中。</li>
+<li>如果函数返回两个值，X0 和 X1 会分别存储第一个和第二个返回值。</li>
+<li>对于较大的返回值（如结构体），这些值可能通过栈传递。</li>
+</ul>
+<h3 id="保存调用者寄存器和被调用者寄存器"><a href="#保存调用者寄存器和被调用者寄存器" class="headerlink" title="保存调用者寄存器和被调用者寄存器"></a>保存调用者寄存器和被调用者寄存器</h3><ul>
+<li>调用者保存寄存器（Caller-Saved Registers）：调用者在调用函数之前，负责保存它们的值，因为函数调用可能会覆盖这些寄存器的值。包括：X0-X15。</li>
+<li>被调用者保存寄存器（Callee-Saved Registers）：被调用者必须在函数结束前恢复它们的值，包括：X19-X29。这些寄存器在函数调用期间不会被修改，<br>这相当于是一个规则的约定，因为在函数调用中，寄存器的值会被覆盖，如果要恢复就需要保存. X0-X15是调用者需要负责保存的寄存器，X19-X29是被调用者需要负责保存的寄存器。<br>除非函数主动保存和恢复它们的值。</li>
+</ul>
+<h2 id="函数调用过程详解"><a href="#函数调用过程详解" class="headerlink" title="函数调用过程详解"></a>函数调用过程详解</h2><h3 id="栈的使用"><a href="#栈的使用" class="headerlink" title="栈的使用"></a>栈的使用</h3><p>  栈是函数调用中保存数据的核心工具。AArch64 中的栈是向下生长的，也就是说，栈指针（SP）的值会随着数据的压栈而减小。</p>
+<ul>
+<li>栈指针（SP）：指向当前栈的顶部。每次调用函数时，栈指针会移动以腾出空间存储局部变量、溢出的参数和保存寄存器。</li>
+<li>保存当前栈帧的基地址，便于追踪局部变量和恢复栈帧。每个函数调用时，新的栈帧会被创建，并将前一个栈帧的地址存入栈中，以便函数调用结束后恢复调用者的上下文。</li>
+</ul>
+<h3 id="函数调用的步骤"><a href="#函数调用的步骤" class="headerlink" title="函数调用的步骤"></a>函数调用的步骤</h3><h4 id="保存上下文"><a href="#保存上下文" class="headerlink" title="保存上下文"></a>保存上下文</h4><ul>
+<li>调用者保存寄存器（Caller-Saved Registers）：调用者在调用函数之前，负责保存它们的值，因为函数调用可能会覆盖这些寄存器的值。包括：X0-X15。</li>
+<li>保存返回地址：将返回地址存入栈中，以便函数调用结束后恢复调用者的上下文。</li>
+<li>保存栈帧指针：保存当前栈帧的基地址，便于追踪局部变量和恢复栈帧。</li>
+</ul>
+<h4 id="传递参数"><a href="#传递参数" class="headerlink" title="传递参数"></a>传递参数</h4><ul>
+<li>将函数参数传递到 X0 - X7 寄存器中，如果参数超过 8 个，剩余的参数会被传递到栈中。</li>
+</ul>
+<h4 id="调用函数"><a href="#调用函数" class="headerlink" title="调用函数"></a>调用函数</h4><p>使用 BL（Branch with Link）指令跳转到被调用函数，X30（Link Register）会保存返回地址。函数调用完成后，程序会通过 X30 返回调用者。</p>
+<h4 id="执行函数体"><a href="#执行函数体" class="headerlink" title="执行函数体"></a>执行函数体</h4><p>被调用的函数会根据需要使用 X0-X7 中的参数，执行逻辑。<br>如果需要使用保存寄存器（X19-X29），函数需要先将这些寄存器的值保存到栈上。</p>
+<h4 id="返回结果"><a href="#返回结果" class="headerlink" title="返回结果"></a>返回结果</h4><p>如果函数有返回值，它会将结果放入 X0 中返回。对于较复杂的返回值（如结构体），则可能会通过栈返回。</p>
 ]]></content>
       <categories>
         <category>汇编</category>
