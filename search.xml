@@ -211,6 +211,7 @@
     <title>记一次安卓编译过程</title>
     <url>/2024/08/19/oldandroidapp/</url>
     <content><![CDATA[<p>因为接手一个老项目，需要对安卓项目进行编译，但是项目中的很多依赖已经过时，官方库已经删除,当中遇到很多问题。这里记录一下编译过程。</p>
+<span id="more"></span>
 <h2 id="Java版本问题"><a href="#Java版本问题" class="headerlink" title="Java版本问题"></a>Java版本问题</h2><h3 id="gradlew-build-出现以下错误"><a href="#gradlew-build-出现以下错误" class="headerlink" title="gradlew build  出现以下错误"></a>gradlew build  出现以下错误</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">Could not initialize class org.codehaus.groovy.classgen.Verifier</span><br></pre></td></tr></table></figure>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">java.lang.NoClassDefFoundError: Could not initialize class org.codehaus.groovy.vmplugin.v7.Java7</span><br></pre></td></tr></table></figure>
 
@@ -696,6 +697,22 @@
 </code></pre>
 <h3 id="栈帧的布局"><a href="#栈帧的布局" class="headerlink" title="栈帧的布局"></a>栈帧的布局</h3><pre><code>一个典型的栈帧布局如下
 <figure class="highlight arm"><table><tr><td class="code"><pre><span class="line">    高地址</span><br><span class="line">+-----------------------------+ &lt;- <span class="built_in">fp</span> (<span class="built_in">x29</span>)</span><br><span class="line"><span class="title">|      保存的旧 fp (x29)       |</span></span><br><span class="line">+-----------------------------+</span><br><span class="line"><span class="title">|       保存的 lr (x30)        |</span></span><br><span class="line">+-----------------------------+</span><br><span class="line"><span class="title">|       函数参数（如果在栈上）  |</span></span><br><span class="line">+-----------------------------+</span><br><span class="line"><span class="title">|        局部变量              |</span></span><br><span class="line">+-----------------------------+</span><br><span class="line"><span class="title">|        临时数据              |</span></span><br><span class="line">+-----------------------------+</span><br><span class="line"><span class="title">|                             |</span> &lt;- <span class="built_in">sp</span></span><br><span class="line">+-----------------------------+ &lt;- 低地址</span><br></pre></td></tr></table></figure>
+</code></pre>
+<h3 id="典型的函数栈帧开头和结尾"><a href="#典型的函数栈帧开头和结尾" class="headerlink" title="典型的函数栈帧开头和结尾"></a>典型的函数栈帧开头和结尾</h3><pre><code>- 在函数入口处
+  - 保存存前一个栈帧(调用者)的帧指针和返回地址
+<figure class="highlight arm"><table><tr><td class="code"><pre><span class="line"><span class="symbol">stp</span> <span class="built_in">x29</span>, <span class="built_in">x30</span>, [<span class="built_in">sp</span>, #-<span class="number">16</span>]!   <span class="comment">// 保存旧的 fp (x29) 和 lr (x30)，sp -= 16</span></span><br></pre></td></tr></table></figure>
+  - 设置新的帧指针
+<figure class="highlight arm"><table><tr><td class="code"><pre><span class="line"><span class="keyword">mov</span> <span class="built_in">x29</span>, <span class="built_in">sp</span>                 <span class="comment">// 设置新的 fp = sp</span></span><br></pre></td></tr></table></figure>
+ - 分配栈空间用于局部变量
+<figure class="highlight arm"><table><tr><td class="code"><pre><span class="line"><span class="keyword">sub</span> <span class="built_in">sp</span>, <span class="built_in">sp</span>, <span class="number">#16</span>             <span class="comment">// 分配16字节的栈空间</span></span><br></pre></td></tr></table></figure>
+- 函数结尾
+在函数退出前，尾声负责
+  - 释放局部变量占用的栈空间 
+<figure class="highlight arm"><table><tr><td class="code"><pre><span class="line"><span class="keyword">add</span> <span class="built_in">sp</span>, <span class="built_in">sp</span>, <span class="number">#16</span>             <span class="comment">// 释放16字节的栈空间</span></span><br></pre></td></tr></table></figure>
+  - 恢复前一个栈帧的帧指针和返回地址
+<figure class="highlight arm"><table><tr><td class="code"><pre><span class="line"><span class="symbol">ldp</span> <span class="built_in">x29</span>, <span class="built_in">x30</span>, [<span class="built_in">sp</span>], <span class="number">#16</span>     <span class="comment">// 恢复旧的 fp (x29) 和 lr (x30)，sp += 16</span></span><br></pre></td></tr></table></figure>
+  - 返回到调用者
+<figure class="highlight arm"><table><tr><td class="code"><pre><span class="line"><span class="symbol">ret</span>                         <span class="comment">// 返回到调用者</span></span><br></pre></td></tr></table></figure>
 </code></pre>
 ]]></content>
       <categories>
