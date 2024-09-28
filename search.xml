@@ -764,8 +764,8 @@
       </categories>
   </entry>
   <entry>
-    <title></title>
-    <url>/2024/09/28/math/</url>
+    <title>数学</title>
+    <url>/2024/09/27/math/</url>
     <content><![CDATA[<h1 id="不等式解答"><a href="#不等式解答" class="headerlink" title="不等式解答"></a>不等式解答</h1><p>要确定参数 ( a ) 的取值范围，使得不等式<br>[<br>x^2 + a x + 15 - a \geq 0<br>]<br>对于所有 ( x ) 满足 ( -4 \leq x \leq 0 ) 恒成立，我们可以按照以下步骤进行分析：</p>
 <h2 id="1-分析二次函数的性质"><a href="#1-分析二次函数的性质" class="headerlink" title="1. 分析二次函数的性质"></a>1. 分析二次函数的性质</h2><p>不等式可以表示为二次函数：<br>[<br>f(x) &#x3D; x^2 + a x + (15 - a)<br>]</p>
 <p>因为二次项系数为正（即 ( 1 &gt; 0 )），所以函数图像开口向上。为了保证不等式在区间 ( [-4, 0] ) 上恒成立，需要保证函数在该区间内的最小值不小于零。</p>
@@ -777,5 +777,8 @@
 <h2 id="3-综合分析"><a href="#3-综合分析" class="headerlink" title="3. 综合分析"></a>3. 综合分析</h2><p>结合以上情况，满足条件的 ( a ) 的取值范围为：<br>[<br>a \leq 6<br>]</p>
 <h2 id="最终结论"><a href="#最终结论" class="headerlink" title="最终结论"></a>最终结论</h2><p>参数 ( a ) 的取值范围是所有实数中小于或等于 6 的数，即：<br>[<br>a \leq 6<br>]</p>
 ]]></content>
+      <categories>
+        <category>数学</category>
+      </categories>
   </entry>
 </search>
